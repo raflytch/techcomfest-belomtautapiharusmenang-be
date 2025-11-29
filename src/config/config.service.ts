@@ -151,4 +151,12 @@ export class AppConfigService {
   get googleCallbackPath(): string {
     return this.get<string>('GOOGLE_CALLBACK_PATH', '/auth/callback');
   }
+
+  /**
+   * Get Google Gen AI API Key
+   * @returns {string} GOOGLE_GENAI_API_KEY environment variable
+   */
+  get googleGenAiApiKey(): string {
+    return this.get<string>('GOOGLE_GENAI_API_KEY', '');
+  }
 }
