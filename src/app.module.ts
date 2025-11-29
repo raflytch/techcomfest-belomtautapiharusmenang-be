@@ -1,12 +1,29 @@
+/**
+ * @fileoverview Main application module
+ * @description Root module that imports all feature modules
+ */
+
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
-import { UserModule } from './domains/user.module';
+import { UserModule } from './domains/user/user.module';
+import { MailerModule } from './libs/mailer/mailer.module';
+import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
 
+/**
+ * Main application module
+ * @description Imports all feature modules and global providers
+ */
 @Module({
-  imports: [UserModule, ConfigModule, DatabaseModule],
+  imports: [
+    ConfigModule,
+    DatabaseModule,
+    MailerModule,
+    CloudinaryModule,
+    UserModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

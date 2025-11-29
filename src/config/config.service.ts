@@ -79,4 +79,76 @@ export class AppConfigService {
   get jwtExpiresIn(): string {
     return this.get<string>('JWT_EXPIRES_IN', '7d');
   }
+
+  /**
+   * Get Google OAuth Client ID
+   * @returns {string} GOOGLE_CLIENT_ID environment variable
+   */
+  get googleClientId(): string {
+    return this.get<string>('GOOGLE_CLIENT_ID', '');
+  }
+
+  /**
+   * Get Google OAuth Client Secret
+   * @returns {string} GOOGLE_CLIENT_SECRET environment variable
+   */
+  get googleClientSecret(): string {
+    return this.get<string>('GOOGLE_CLIENT_SECRET', '');
+  }
+
+  /**
+   * Get Cloudinary Cloud Name
+   * @returns {string} CLOUDINARY_CLOUD_NAME environment variable
+   */
+  get cloudinaryCloudName(): string {
+    return this.get<string>('CLOUDINARY_CLOUD_NAME', '');
+  }
+
+  /**
+   * Get Cloudinary API Key
+   * @returns {string} CLOUDINARY_API_KEY environment variable
+   */
+  get cloudinaryApiKey(): string {
+    return this.get<string>('CLOUDINARY_API_KEY', '');
+  }
+
+  /**
+   * Get Cloudinary API Secret
+   * @returns {string} CLOUDINARY_API_SECRET environment variable
+   */
+  get cloudinaryApiSecret(): string {
+    return this.get<string>('CLOUDINARY_API_SECRET', '');
+  }
+
+  /**
+   * Get Email User (Gmail address)
+   * @returns {string} EMAIL_USER environment variable
+   */
+  get emailUser(): string {
+    return this.get<string>('EMAIL_USER', '');
+  }
+
+  /**
+   * Get Email App Password (16-digit Gmail app password)
+   * @returns {string} EMAIL_APP_PASSWORD environment variable
+   */
+  get emailAppPassword(): string {
+    return this.get<string>('EMAIL_APP_PASSWORD', '');
+  }
+
+  /**
+   * Get Frontend URL for OAuth callback redirect
+   * @returns {string} FRONTEND_URL environment variable
+   */
+  get frontendUrl(): string {
+    return this.get<string>('FRONTEND_URL', 'http://localhost:3000');
+  }
+
+  /**
+   * Get Google OAuth callback path on frontend
+   * @returns {string} GOOGLE_CALLBACK_PATH environment variable
+   */
+  get googleCallbackPath(): string {
+    return this.get<string>('GOOGLE_CALLBACK_PATH', '/auth/callback');
+  }
 }

@@ -17,14 +17,19 @@ datasource db {
  * @description Stores user data including UMKM profile for UMKM role users
  */
 model user {
-  id            String   @id @default(uuid())
-  email         String   @unique
+  id            String  @id @default(uuid())
+  email         String  @unique
   name          String
-  password_hash String
+  password_hash String?
 
-  role       UserRole @default(WARGA)
-  phone      String?
+  role       UserRole
   avatar_url String?
+
+  /** Google OAuth ID - for users who login via Google */
+  google_id String? @unique
+
+  /** Email verification status */
+  is_email_verified Boolean @default(false)
 
   /** UMKM Profile - Only filled for users with UMKM role */
   umkm_name        String?
@@ -44,8 +49,36 @@ model user {
   voucher_claims voucher_claim[]
   leaderboard    leaderboard_entry[]
   vouchers       voucher[]
+  otp_codes      otp_code[]
 
   @@index([role])
+}
+
+/**
+ * OTP Code model
+ * @description Stores OTP codes for email verification
+ */
+model otp_code {
+  id      String @id @default(uuid())
+  user_id String?
+  user    user?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  /** Email for OTP */
+  email String
+
+  /** OTP code and verification status */
+  code       String
+  is_used    Boolean  @default(false)
+  is_verified Boolean @default(false)
+  expires_at DateTime
+
+  /** OTP purpose: REGISTER, DELETE_ACCOUNT, VERIFY_EMAIL */
+  purpose String
+
+  created_at DateTime @default(now())
+
+  @@index([email, code])
+  @@index([expires_at])
 }
 
 /**

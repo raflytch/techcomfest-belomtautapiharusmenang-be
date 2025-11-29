@@ -28,6 +28,12 @@ export default tseslint.config(
         'warn',
         { argsIgnorePattern: '^_' },
       ],
+      'prettier/prettier': [
+        'error',
+        {
+          endOfLine: 'auto',
+        },
+      ],
     },
   },
 );
