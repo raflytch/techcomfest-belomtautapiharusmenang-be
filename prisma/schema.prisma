@@ -1,0 +1,178 @@
+/**
+ * @fileoverview Prisma Schema for Impact2Action
+ * @description Database schema using PostgreSQL
+ * @tagline Sense Every Action, Reward Every Impact
+ */
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+/**
+ * User model
+ * @description Stores user data including UMKM profile for UMKM role users
+ */
+model user {
+  id            String   @id @default(uuid())
+  email         String   @unique
+  name          String
+  password_hash String
+
+  role       UserRole @default(WARGA)
+  phone      String?
+  avatar_url String?
+
+  /** UMKM Profile - Only filled for users with UMKM role */
+  umkm_name        String?
+  umkm_description String?
+  umkm_logo_url    String?
+  umkm_address     String?
+  umkm_category    String?
+
+  total_points Int     @default(0)
+  is_active    Boolean @default(true)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  /** Relations */
+  green_actions  green_action[]
+  voucher_claims voucher_claim[]
+  leaderboard    leaderboard_entry[]
+  vouchers       voucher[]
+
+  @@index([role])
+}
+
+/**
+ * User Role Enum
+ * @description WARGA - Regular user, UMKM - Small business, DLH - Environment agency, ADMIN - System admin
+ */
+enum UserRole {
+  WARGA
+  UMKM
+  DLH
+  ADMIN
+}
+
+/**
+ * Green Action model
+ * @description Stores green actions performed by users with AI verification results
+ */
+model green_action {
+  id      String @id @default(uuid())
+  user_id String
+  user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  /** Category: GREEN_WASTE, GREEN_HOME, GREEN_CONSUMPTION, GREEN_COMMUNITY */
+  category    String
+  description String?
+
+  /** Media upload for verification */
+  media_url  String
+  media_type String
+
+  /** AI verification results */
+  status      String @default("PENDING")
+  ai_score    Int?
+  ai_feedback String?
+  ai_labels   String?
+
+  /** Points calculated from AI */
+  points Int @default(0)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  voucher_claims voucher_claim[]
+
+  @@index([user_id])
+  @@index([category])
+  @@index([status])
+  @@index([created_at])
+}
+
+/**
+ * Voucher model
+ * @description Vouchers provided by UMKM that users can redeem with points
+ */
+model voucher {
+  id      String @id @default(uuid())
+  umkm_id String
+  umkm    user   @relation(fields: [umkm_id], references: [id], onDelete: Cascade)
+
+  name            String
+  description     String
+  points_required Int
+
+  /** Discount type - either percentage or fixed amount */
+  discount_percentage Int?
+  discount_amount     Int?
+
+  /** Voucher quota */
+  quota_total Int
+  quota_used  Int @default(0)
+
+  is_active   Boolean  @default(true)
+  valid_from  DateTime
+  valid_until DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  voucher_claims voucher_claim[]
+
+  @@index([umkm_id])
+  @@index([is_active])
+  @@index([valid_until])
+}
+
+/**
+ * Voucher Claim model
+ * @description Stores voucher claims by users with status: PENDING, USED, EXPIRED
+ */
+model voucher_claim {
+  id      String @id @default(uuid())
+  user_id String
+  user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  voucher_id String
+  voucher    voucher @relation(fields: [voucher_id], references: [id], onDelete: Cascade)
+
+  /** Optional relation to green_action for tracking */
+  green_action_id String?
+  green_action    green_action? @relation(fields: [green_action_id], references: [id], onDelete: SetNull)
+
+  status     String    @default("PENDING")
+  claimed_at DateTime  @default(now())
+  used_at    DateTime?
+
+  @@index([user_id])
+  @@index([voucher_id])
+}
+
+/**
+ * Leaderboard Entry model
+ * @description Monthly leaderboard entries - one entry per user per month
+ */
+model leaderboard_entry {
+  id      String @id @default(uuid())
+  user_id String
+  user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  total_points  Int
+  total_actions Int
+
+  /** Leaderboard period */
+  month Int
+  year  Int
+
+  created_at DateTime @default(now())
+
+  @@unique([user_id, month, year])
+  @@index([total_points])
+}
