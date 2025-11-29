@@ -11,6 +11,7 @@ import { DatabaseModule } from './database/database.module';
 import { UserModule } from './domains/user/user.module';
 import { MailerModule } from './libs/mailer/mailer.module';
 import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
+import { GoogleGenAiModule } from './libs/google-genai/google-gen-ai.module';
 
 /**
  * Main application module
@@ -22,6 +23,7 @@ import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
     DatabaseModule,
     MailerModule,
     CloudinaryModule,
+    GoogleGenAiModule,
     UserModule,
   ],
   controllers: [AppController],
