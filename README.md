@@ -23,12 +23,59 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Impact2Action Backend - NestJS API for eco-friendly platform with Google OAuth and email OTP authentication.
+
+## Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```env
+# Database
+DATABASE_URL="postgresql://user:password@localhost:5432/impact2action"
+
+# JWT
+JWT_SECRET="your-secret-key"
+JWT_EXPIRES_IN="7d"
+
+# Google OAuth
+GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
+GOOGLE_CLIENT_SECRET="your-google-client-secret"
+
+# Email (Gmail with App Password)
+EMAIL_USER="your-email@gmail.com"
+EMAIL_APP_PASSWORD="your-16-digit-app-password"
+
+# Cloudinary
+CLOUDINARY_CLOUD_NAME="your-cloud-name"
+CLOUDINARY_API_KEY="your-api-key"
+CLOUDINARY_API_SECRET="your-api-secret"
+
+# Server
+PORT=3000
+NODE_ENV="development"
+```
+
+### Setting up Gmail App Password
+
+1. Go to Google Account Settings
+2. Security → 2-Step Verification (enable if not enabled)
+3. App passwords → Create new app password
+4. Copy the 16-digit password to `EMAIL_APP_PASSWORD`
 
 ## Project setup
 
 ```bash
 $ pnpm install
+```
+
+## Database setup
+
+```bash
+# Generate Prisma client
+$ npx prisma generate
+
+# Run migrations
+$ npx prisma migrate dev
 ```
 
 ## Compile and run the project
