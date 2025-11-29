@@ -74,25 +74,37 @@ export class UserService {
    * Transform user entity to safe response (without password)
    * @param {user} user - User entity from database
    * @returns {SafeUser} Safe user object without sensitive data
+   * @description Returns different fields based on user role:
+   * - UMKM: includes UMKM profile fields
+   * - WARGA/DLH/ADMIN: excludes UMKM fields
    */
   private toSafeUser(user: user): SafeUser {
-    return {
+    const baseUser = {
       id: user.id,
       email: user.email,
       name: user.name,
       role: user.role,
       avatarUrl: user.avatar_url,
       isEmailVerified: user.is_email_verified,
-      umkmName: user.umkm_name,
-      umkmDescription: user.umkm_description,
-      umkmLogoUrl: user.umkm_logo_url,
-      umkmAddress: user.umkm_address,
-      umkmCategory: user.umkm_category,
       totalPoints: user.total_points,
       isActive: user.is_active,
       createdAt: user.created_at,
       updatedAt: user.updated_at,
     };
+
+    // Only include UMKM fields for UMKM role
+    if (user.role === UserRole.UMKM) {
+      return {
+        ...baseUser,
+        umkmName: user.umkm_name,
+        umkmDescription: user.umkm_description,
+        umkmLogoUrl: user.umkm_logo_url,
+        umkmAddress: user.umkm_address,
+        umkmCategory: user.umkm_category,
+      };
+    }
+
+    return baseUser;
   }
 
   /**

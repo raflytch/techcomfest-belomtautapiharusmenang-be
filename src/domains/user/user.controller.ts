@@ -163,7 +163,9 @@ export class UserController {
   @ApiOperation({
     summary: 'Register new user with email/password',
     description:
-      'Create new account and send OTP automatically. Use verify-otp endpoint to complete registration.',
+      'Create new account and send OTP automatically. Use verify-otp endpoint to complete registration.\n\n' +
+      '**Important:** UMKM fields (umkmName, umkmDescription, umkmAddress, umkmCategory) are ONLY required when role is "UMKM". ' +
+      'For other roles (WARGA, DLH, ADMIN), do NOT send these fields in the request body.',
   })
   @ApiBody({ type: RegisterUserDto })
   @ApiResponse({
@@ -181,7 +183,7 @@ export class UserController {
   })
   @ApiResponse({
     status: 400,
-    description: 'Missing UMKM fields',
+    description: 'Missing UMKM fields when role is UMKM',
   })
   @ApiResponse({
     status: 409,
@@ -216,8 +218,17 @@ export class UserController {
   @Get('session')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('access-token')
-  @ApiOperation({ summary: 'Get current authenticated user session' })
-  @ApiResponse({ status: 200, description: 'Current user data' })
+  @ApiOperation({
+    summary: 'Get current authenticated user session',
+    description:
+      'Returns user profile data. Response fields vary by role:\n\n' +
+      '- **UMKM users**: Includes umkmName, umkmDescription, umkmLogoUrl, umkmAddress, umkmCategory\n' +
+      '- **WARGA/DLH/ADMIN users**: UMKM fields are NOT included in response',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Current user data (fields vary by role)',
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getSession(@CurrentUser() user: IJwtPayload): Promise<ISafeUser> {
     return this.userService.getSession(user.sub);
