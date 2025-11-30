@@ -67,7 +67,6 @@ async function bootstrap() {
       'access-token',
     )
     .addTag('App', 'Endpoint dasar aplikasi')
-    .addTag('Auth', 'Autentikasi dan registrasi')
     .addTag('Users', 'Manajemen pengguna')
     .addTag('Green Actions', 'Aksi hijau dan verifikasi')
     .addTag('Vouchers', 'Voucher dari UMKM')

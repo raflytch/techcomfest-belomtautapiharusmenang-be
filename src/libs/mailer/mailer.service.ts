@@ -413,4 +413,136 @@ export class MailerService {
       </html>
     `;
   }
+
+  /**
+   * Send leaderboard reward email to winner
+   * @param {string} email - Winner email address
+   * @param {object} rewardData - Reward details
+   * @returns {Promise<void>}
+   */
+  async sendLeaderboardRewardEmail(
+    email: string,
+    rewardData: {
+      userName: string;
+      rank: 1 | 2 | 3;
+      todayPoints: number;
+      bonusPoints: number;
+      newTotalPoints: number;
+      date: Date;
+    },
+  ): Promise<void> {
+    const html = this.getLeaderboardRewardHtml(rewardData);
+
+    try {
+      await this.transporter.sendMail({
+        from: `"Impact2Action" <${this.configService.emailUser}>`,
+        to: email,
+        subject: `🏆 Impact2Action - Congratulations! You're #${rewardData.rank} Today!`,
+        html,
+      });
+
+      if (this.configService.isDevelopment) {
+        console.log(`🏆 [DEV] Leaderboard reward email sent to ${email}`);
+      }
+    } catch (error) {
+      console.error('Leaderboard reward email error:', error);
+    }
+  }
+
+  /**
+   * Get leaderboard reward email HTML template
+   * @param {object} data - Reward data
+   * @returns {string} HTML email content
+   */
+  private getLeaderboardRewardHtml(data: {
+    userName: string;
+    rank: 1 | 2 | 3;
+    todayPoints: number;
+    bonusPoints: number;
+    newTotalPoints: number;
+    date: Date;
+  }): string {
+    const rankEmoji = { 1: '🥇', 2: '🥈', 3: '🥉' };
+    const rankText = { 1: '1st Place', 2: '2nd Place', 3: '3rd Place' };
+    const rankColor = { 1: '#FFD700', 2: '#C0C0C0', 3: '#CD7F32' };
+
+    const dateFormatted = data.date.toLocaleDateString('id-ID', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Leaderboard Reward - Impact2Action</title>
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">🏆 Daily Champion!</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">${dateFormatted}</p>
+            </div>
+            
+            <div style="background: white; padding: 40px 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <p style="color: #666; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
+                Hi <strong>${data.userName}</strong>! 👋
+              </p>
+              <p style="color: #666; line-height: 1.6; margin: 0 0 30px 0;">
+                Amazing work! You've made it to the top of today's leaderboard!
+              </p>
+              
+              <div style="background: linear-gradient(135deg, #fefce8 0%, #fef9c3 100%); border: 3px solid ${rankColor[data.rank]}; border-radius: 15px; padding: 30px; margin: 0 0 30px 0; text-align: center;">
+                <div style="font-size: 60px; margin: 0 0 10px 0;">${rankEmoji[data.rank]}</div>
+                <h2 style="color: #333; margin: 0 0 10px 0; font-size: 28px;">${rankText[data.rank]}</h2>
+                <p style="color: #666; margin: 0; font-size: 14px;">Daily Leaderboard</p>
+              </div>
+
+              <div style="background: #f0fdf4; border-radius: 15px; padding: 25px; margin: 0 0 30px 0;">
+                <h3 style="color: #166534; margin: 0 0 20px 0; font-size: 16px; text-align: center;">🎁 Your Reward</h3>
+                <div style="background: white; border-radius: 10px; padding: 20px; text-align: center;">
+                  <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: white; font-size: 36px; font-weight: bold; padding: 20px; border-radius: 10px; margin: 0 0 15px 0;">
+                    +${data.bonusPoints} pts
+                  </div>
+                  <p style="color: #666; margin: 0; font-size: 14px;">Bonus Points Added!</p>
+                </div>
+              </div>
+
+              <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin: 0 0 30px 0;">
+                <h4 style="color: #333; margin: 0 0 15px 0; font-size: 14px;">📊 Points Summary</h4>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="color: #666; padding: 8px 0;">Today's Points:</td>
+                    <td style="color: #333; font-weight: bold; text-align: right;">${data.todayPoints} pts</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #666; padding: 8px 0; border-top: 1px solid #e5e7eb;">Bonus Reward:</td>
+                    <td style="color: #22c55e; font-weight: bold; text-align: right;">+${data.bonusPoints} pts</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #666; padding: 8px 0; border-top: 2px solid #22c55e;">New Total:</td>
+                    <td style="color: #22c55e; font-weight: bold; font-size: 18px; text-align: right;">${data.newTotalPoints} pts</td>
+                  </tr>
+                </table>
+              </div>
+
+              <p style="color: #999; font-size: 14px; margin: 0; text-align: center;">
+                Keep up the amazing green actions! 🌱<br>
+                Tomorrow is a new chance to be #1!
+              </p>
+            </div>
+            
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p style="margin: 0;">© 2025 Impact2Action. All rights reserved.</p>
+              <p style="margin: 5px 0 0 0;">Making every green action count! 🌍</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  }
 }

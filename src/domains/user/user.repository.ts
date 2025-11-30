@@ -229,25 +229,18 @@ export class UserRepository {
     greenActionsCount: number;
     voucherClaimsCount: number;
     vouchersCount: number;
-    leaderboardEntriesCount: number;
   }> {
-    const [
-      greenActionsCount,
-      voucherClaimsCount,
-      vouchersCount,
-      leaderboardEntriesCount,
-    ] = await this.db.$transaction([
-      this.db.green_action.count({ where: { user_id: userId } }),
-      this.db.voucher_claim.count({ where: { user_id: userId } }),
-      this.db.voucher.count({ where: { umkm_id: userId } }),
-      this.db.leaderboard_entry.count({ where: { user_id: userId } }),
-    ]);
+    const [greenActionsCount, voucherClaimsCount, vouchersCount] =
+      await this.db.$transaction([
+        this.db.green_action.count({ where: { user_id: userId } }),
+        this.db.voucher_claim.count({ where: { user_id: userId } }),
+        this.db.voucher.count({ where: { umkm_id: userId } }),
+      ]);
 
     return {
       greenActionsCount,
       voucherClaimsCount,
       vouchersCount,
-      leaderboardEntriesCount,
     };
   }
 }
