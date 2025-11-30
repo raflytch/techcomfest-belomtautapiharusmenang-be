@@ -22,7 +22,8 @@
       "@commons/*": ["src/commons/*"],
       "@config/*": ["src/config/*"],
       "@database/*": ["src/database/*"],
-      "@domains/*": ["src/domains/*"]
+      "@domains/*": ["src/domains/*"],
+      "@libs/*": ["src/libs/*"]
     }
   }
 }

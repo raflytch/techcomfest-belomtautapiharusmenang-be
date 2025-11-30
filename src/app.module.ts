@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './domains/user/user.module';
+import { GreenWasteAiModule } from './domains/green-waste-ai/green-waste-ai.module';
 import { MailerModule } from './libs/mailer/mailer.module';
 import { CloudinaryModule } from './libs/cloudinary/cloudinary.module';
 import { GoogleGenAiModule } from './libs/google-genai/google-gen-ai.module';
@@ -25,6 +26,7 @@ import { GoogleGenAiModule } from './libs/google-genai/google-gen-ai.module';
     CloudinaryModule,
     GoogleGenAiModule,
     UserModule,
+    GreenWasteAiModule,
   ],
   controllers: [AppController],
   providers: [AppService],
