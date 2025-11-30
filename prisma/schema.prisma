@@ -55,7 +55,6 @@ model user {
    */
   green_actions  green_action[]
   voucher_claims voucher_claim[]
-  leaderboard    leaderboard_entry[]
   vouchers       voucher[]
   otp_codes      otp_code[]
 
@@ -215,28 +214,4 @@ model voucher_claim {
 
   @@index([user_id])
   @@index([voucher_id])
-}
-
-/**
- * Leaderboard Entry model
- * @description Monthly leaderboard entries - one entry per user per month
- */
-model leaderboard_entry {
-  id      String @id @default(uuid())
-  user_id String
-  user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-
-  total_points  Int
-  total_actions Int
-
-  /**
-   * Leaderboard period
-   */
-  month Int
-  year  Int
-
-  created_at DateTime @default(now())
-
-  @@unique([user_id, month, year])
-  @@index([total_points])
 }

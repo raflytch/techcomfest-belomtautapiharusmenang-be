@@ -656,7 +656,6 @@ export class UserService {
         greenActionsToDelete: stats.greenActionsCount,
         voucherClaimsToDelete: stats.voucherClaimsCount,
         vouchersToDelete: stats.vouchersCount,
-        leaderboardEntriesToDelete: stats.leaderboardEntriesCount,
       },
     };
   }
