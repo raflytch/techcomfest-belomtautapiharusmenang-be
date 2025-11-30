@@ -25,13 +25,19 @@ model user {
   role       UserRole
   avatar_url String?
 
-  /** Google OAuth ID - for users who login via Google */
+  /**
+   * Google OAuth ID - for users who login via Google
+   */
   google_id String? @unique
 
-  /** Email verification status */
+  /**
+   * Email verification status
+   */
   is_email_verified Boolean @default(false)
 
-  /** UMKM Profile - Only filled for users with UMKM role */
+  /**
+   * UMKM Profile - Only filled for users with UMKM role
+   */
   umkm_name        String?
   umkm_description String?
   umkm_logo_url    String?
@@ -44,7 +50,9 @@ model user {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  /** Relations */
+  /**
+   * Relations
+   */
   green_actions  green_action[]
   voucher_claims voucher_claim[]
   leaderboard    leaderboard_entry[]
@@ -59,20 +67,26 @@ model user {
  * @description Stores OTP codes for email verification
  */
 model otp_code {
-  id      String @id @default(uuid())
+  id      String  @id @default(uuid())
   user_id String?
-  user    user?  @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  user    user?   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  /** Email for OTP */
+  /**
+   * Email for OTP
+   */
   email String
 
-  /** OTP code and verification status */
-  code       String
-  is_used    Boolean  @default(false)
-  is_verified Boolean @default(false)
-  expires_at DateTime
+  /**
+   * OTP code and verification status
+   */
+  code        String
+  is_used     Boolean  @default(false)
+  is_verified Boolean  @default(false)
+  expires_at  DateTime
 
-  /** OTP purpose: REGISTER, DELETE_ACCOUNT, VERIFY_EMAIL */
+  /**
+   * OTP purpose: REGISTER, DELETE_ACCOUNT, VERIFY_EMAIL
+   */
   purpose String
 
   created_at DateTime @default(now())
@@ -101,21 +115,29 @@ model green_action {
   user_id String
   user    user   @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
-  /** Category: GREEN_WASTE, GREEN_HOME, GREEN_CONSUMPTION, GREEN_COMMUNITY */
+  /**
+   * Category: GREEN_WASTE, GREEN_HOME, GREEN_CONSUMPTION, GREEN_COMMUNITY
+   */
   category    String
   description String?
 
-  /** Media upload for verification */
+  /**
+   * Media upload for verification
+   */
   media_url  String
   media_type String
 
-  /** AI verification results */
-  status      String @default("PENDING")
+  /**
+   * AI verification results
+   */
+  status      String  @default("PENDING")
   ai_score    Int?
   ai_feedback String?
   ai_labels   String?
 
-  /** Points calculated from AI */
+  /**
+   * Points calculated from AI
+   */
   points Int @default(0)
 
   created_at DateTime @default(now())
@@ -140,13 +162,18 @@ model voucher {
 
   name            String
   description     String
+  image_url       String?
   points_required Int
 
-  /** Discount type - either percentage or fixed amount */
+  /**
+   * Discount type - either percentage or fixed amount
+   */
   discount_percentage Int?
   discount_amount     Int?
 
-  /** Voucher quota */
+  /**
+   * Voucher quota
+   */
   quota_total Int
   quota_used  Int @default(0)
 
@@ -176,7 +203,9 @@ model voucher_claim {
   voucher_id String
   voucher    voucher @relation(fields: [voucher_id], references: [id], onDelete: Cascade)
 
-  /** Optional relation to green_action for tracking */
+  /**
+   * Optional relation to green_action for tracking
+   */
   green_action_id String?
   green_action    green_action? @relation(fields: [green_action_id], references: [id], onDelete: SetNull)
 
@@ -200,7 +229,9 @@ model leaderboard_entry {
   total_points  Int
   total_actions Int
 
-  /** Leaderboard period */
+  /**
+   * Leaderboard period
+   */
   month Int
   year  Int
 
