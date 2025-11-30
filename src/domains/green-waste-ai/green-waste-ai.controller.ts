@@ -203,7 +203,7 @@ export class GreenWasteAiController {
    */
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.CREATED)
   @UseInterceptors(FileInterceptor('media'))
   @ApiOperation({
@@ -287,7 +287,7 @@ export class GreenWasteAiController {
    */
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get my green actions',
@@ -321,7 +321,7 @@ export class GreenWasteAiController {
    */
   @Get('me/stats')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get my green action statistics',
@@ -349,7 +349,7 @@ export class GreenWasteAiController {
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN', 'DLH')
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get all green actions (Admin/DLH only)',
@@ -382,7 +382,7 @@ export class GreenWasteAiController {
    */
   @Get(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get green action by ID',
@@ -431,7 +431,7 @@ export class GreenWasteAiController {
    */
   @Delete(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Delete green action',
@@ -475,7 +475,7 @@ export class GreenWasteAiController {
    */
   @Post(':id/retry')
   @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth()
+  @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Retry verification',
