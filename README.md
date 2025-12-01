@@ -1,145 +1,169 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 🌱 Impact2Action Backend
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+Platform aksi hijau berbasis AI untuk mendorong partisipasi warga dalam pengelolaan sampah, penanaman pohon, dan konsumsi produk ramah lingkungan.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 📋 Deskripsi
 
-## Description
+**Impact2Action** adalah backend API yang mendukung platform eco-friendly dengan fitur:
 
-Impact2Action Backend - NestJS API for eco-friendly platform with Google OAuth and email OTP authentication.
+- 🤖 **AI-Powered Verification** - Verifikasi otomatis aksi hijau menggunakan Google Generative AI
+- 🔐 **Authentication** - Google OAuth & Email OTP
+- 🎯 **Gamification** - Sistem poin, badge, dan leaderboard
+- 🎁 **Reward System** - Penukaran poin ke voucher UMKM hijau
+- 📊 **Dashboard & Reporting** - Statistik aksi hijau per kelurahan/RT/RW
 
-## Environment Variables
+## 👥 Segmen Pengguna
 
-Create a `.env` file in the root directory with the following variables:
+| Role                | Fitur Utama                                                     |
+| ------------------- | --------------------------------------------------------------- |
+| **Warga**           | Upload aksi hijau, kumpulkan poin, tukar reward, ikut challenge |
+| **UMKM Hijau**      | Buat campaign voucher, lihat statistik penukaran                |
+| **Bank Sampah**     | Validasi setoran, dashboard tonase sampah                       |
+| **Admin Kelurahan** | Dashboard agregat, export laporan SDGs                          |
+| **Super Admin**     | Manage user, konfigurasi AI & poin                              |
+
+## 🌿 Kategori Aksi Hijau (AI Detection)
+
+| Kategori              | Contoh Aksi                       | Poin       |
+| --------------------- | --------------------------------- | ---------- |
+| **Green Waste**       | Pilah sampah organik/anorganik/B3 | 30-70 poin |
+| **Green Home**        | Tanam pohon, urban farming        | 40-60 poin |
+| **Green Consumption** | Belanja produk UMKM organik       | 20-30 poin |
+| **Green Community**   | Kerja bakti, bersih sungai        | Bonus poin |
+
+## 🔄 Flow Aplikasi
+
+```
+1. User upload foto/video aksi hijau
+2. AI menganalisis & memberikan skor (0-100)
+3. Backend konversi skor → poin
+4. Poin dikumpulkan untuk reward UMKM
+```
+
+## ⚙️ Environment Variables
+
+Buat file `.env` di root directory:
 
 ```env
-# Database
-DATABASE_URL="postgresql://user:password@localhost:5432/impact2action"
+# ===========================================
+# DATABASE
+# ===========================================
+DATABASE_URL="postgresql://user:password@localhost:5432/impact2action?schema=public"
 
-# JWT
-JWT_SECRET="your-secret-key"
-JWT_EXPIRES_IN="7d"
-
-# Google OAuth
-GOOGLE_CLIENT_ID="your-google-client-id.apps.googleusercontent.com"
-GOOGLE_CLIENT_SECRET="your-google-client-secret"
-
-# Email (Gmail with App Password)
-EMAIL_USER="your-email@gmail.com"
-EMAIL_APP_PASSWORD="your-16-digit-app-password"
-
-# Cloudinary
-CLOUDINARY_CLOUD_NAME="your-cloud-name"
-CLOUDINARY_API_KEY="your-api-key"
-CLOUDINARY_API_SECRET="your-api-secret"
-
-# Server
+# ===========================================
+# APPLICATION
+# ===========================================
 PORT=3000
-NODE_ENV="development"
+NODE_ENV=development
+
+# ===========================================
+# JWT AUTHENTICATION
+# ===========================================
+JWT_SECRET=your-super-secret-jwt-key-change-in-production
+JWT_EXPIRES_IN=7d
+
+# ===========================================
+# GOOGLE OAUTH
+# ===========================================
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Frontend URL for OAuth callback
+FRONTEND_URL=http://localhost:3000
+GOOGLE_CALLBACK_PATH=/auth/callback
+
+# ===========================================
+# GOOGLE GENERATIVE AI (for action verification)
+# ===========================================
+GOOGLE_GENAI_API_KEY=your_google_genai_api_key
+
+# ===========================================
+# CLOUDINARY (media storage)
+# ===========================================
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# ===========================================
+# EMAIL (Gmail with App Password)
+# ===========================================
+EMAIL_USER=your_email@gmail.com
+EMAIL_APP_PASSWORD=your_16_digit_app_password
 ```
 
-### Setting up Gmail App Password
+### 📧 Setup Gmail App Password
 
-1. Go to Google Account Settings
-2. Security → 2-Step Verification (enable if not enabled)
-3. App passwords → Create new app password
-4. Copy the 16-digit password to `EMAIL_APP_PASSWORD`
+1. Buka Google Account Settings
+2. Security → 2-Step Verification (aktifkan jika belum)
+3. App passwords → Buat app password baru
+4. Copy 16-digit password ke `EMAIL_APP_PASSWORD`
 
-## Project setup
+### 🤖 Setup Google Generative AI
+
+1. Buka [Google AI Studio](https://aistudio.google.com/)
+2. Buat API Key baru
+3. Copy ke `GOOGLE_GENAI_API_KEY`
+
+## 🚀 Instalasi
 
 ```bash
+# Install dependencies
 $ pnpm install
-```
 
-## Database setup
-
-```bash
 # Generate Prisma client
 $ npx prisma generate
 
 # Run migrations
 $ npx prisma migrate dev
-```
 
-## Compile and run the project
-
-```bash
-# development
-$ pnpm run start
-
-# watch mode
+# Development mode
 $ pnpm run start:dev
 
-# production mode
+# Production mode
 $ pnpm run start:prod
 ```
 
-## Run tests
+## 🧪 Testing
 
 ```bash
-# unit tests
+# Unit tests
 $ pnpm run test
 
-# e2e tests
+# E2E tests
 $ pnpm run test:e2e
 
-# test coverage
+# Test coverage
 $ pnpm run test:cov
 ```
 
-## Deployment
+## 📁 Struktur Project
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ pnpm install -g mau
-$ mau deploy
+```
+src/
+├── commons/          # Decorators, Guards, Interceptors
+├── config/           # Configuration module
+├── database/         # Prisma database service
+├── domains/          # Business domains
+│   ├── green-waste-ai/   # AI verification service
+│   ├── leaderboard/      # Leaderboard & ranking
+│   ├── user/             # User management
+│   └── voucher/          # Voucher & rewards
+└── libs/             # External integrations
+    ├── cloudinary/       # Media upload
+    ├── google-genai/     # AI verification
+    ├── mailer/           # Email service
+    └── scheduler/        # Cron jobs
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🛠️ Tech Stack
 
-## Resources
+- **Framework**: NestJS
+- **Database**: PostgreSQL + Prisma ORM
+- **Authentication**: JWT + Google OAuth
+- **AI**: Google Generative AI
+- **Storage**: Cloudinary
+- **Email**: Nodemailer (Gmail)
 
-Check out a few resources that may come in handy when working with NestJS:
+## 📄 License
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+[MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE)
