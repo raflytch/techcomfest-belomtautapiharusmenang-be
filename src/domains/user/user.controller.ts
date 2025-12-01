@@ -47,13 +47,13 @@ import {
   RequestDeleteAccountDto,
   ConfirmDeleteAccountDto,
 } from './dto/delete-account.dto';
-import { PaginationDto } from 'src/commons/dto/pagination.dto';
-import { JwtAuthGuard } from 'src/commons/guards/jwt-auth.guard';
-import { RolesGuard } from 'src/commons/guards/roles.guard';
-import { GoogleAuthGuard } from 'src/commons/guards/google-auth.guard';
-import { Roles } from 'src/commons/decorators/roles.decorator';
-import { CurrentUser } from 'src/commons/decorators/current-user.decorator';
-import { IPaginatedResult } from 'src/commons/intefaces/pagination.interface';
+import { PaginationDto } from '../../commons/dto/pagination.dto';
+import { JwtAuthGuard } from '../../commons/guards/jwt-auth.guard';
+import { RolesGuard } from '../../commons/guards/roles.guard';
+import { GoogleAuthGuard } from '../../commons/guards/google-auth.guard';
+import { Roles } from '../../commons/decorators/roles.decorator';
+import { CurrentUser } from '../../commons/decorators/current-user.decorator';
+import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
 
 /**
  * User controller
