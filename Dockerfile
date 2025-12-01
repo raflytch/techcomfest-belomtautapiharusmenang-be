@@ -2,6 +2,7 @@
 # Dockerfile for Impact2Action NestJS Backend
 # ============================================
 # Multi-stage build for optimized production image
+# Optimized for Google Cloud Run
 # ============================================
 
 # ============================================
@@ -14,8 +15,9 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files AND prisma schema (needed for postinstall)
 COPY package.json pnpm-lock.yaml ./
+COPY prisma ./prisma
 
 # Install all dependencies (including devDependencies for build)
 RUN pnpm install --frozen-lockfile
