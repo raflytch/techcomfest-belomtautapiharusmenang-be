@@ -77,6 +77,12 @@ async function bootstrap() {
   SwaggerModule.setup('api-docs', app, document, {
     customSiteTitle: 'Impact2Action API Docs',
     customfavIcon: 'https://nestjs.com/img/logo-small.svg',
+    customCssUrl:
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css',
+    customJs: [
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-bundle.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui-standalone-preset.js',
+    ],
     customCss: `
       .swagger-ui .topbar { display: none }
       .swagger-ui .info { margin-bottom: 20px }
