@@ -1,20 +1,20 @@
 /**
  * @fileoverview Scheduler service
- * @description Handles scheduled tasks for Indonesia timezones (WIB, WITA, WIT)
+ * @description Handles scheduled tasks for daily leaderboard rewards at 23:59 WIB
  */
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
 import { DatabaseService } from '@database/database.service';
 import { MailerService } from '@libs/mailer/mailer.service';
-import { IndonesiaTimezone, TIMEZONE_MAPPING } from './enums/scheduler.enum';
+import { INDONESIA_TIMEZONE } from './enums/scheduler.enum';
 import {
   IDailyRewardResult,
   IDailyRewardWinner,
   ITopUserData,
 } from './interfaces/scheduler.interface';
 import {
-  CRON_JOB_NAMES,
+  CRON_JOB_NAME,
   CRON_SCHEDULE,
   DAILY_BONUS_POINTS,
   TOP_USERS_COUNT,
@@ -22,7 +22,7 @@ import {
 
 /**
  * Scheduler service
- * @description Manages scheduled tasks for all Indonesia timezones
+ * @description Manages daily leaderboard reward distribution at 23:59 WIB
  */
 @Injectable()
 export class SchedulerService {
@@ -37,48 +37,17 @@ export class SchedulerService {
   ) {}
 
   /**
-   * WIB Daily Reward (23:59 WIB)
-   * @description Distributes bonus points to top 3 users in WIB timezone
+   * Daily Reward (23:59 WIB)
+   * @description Distributes bonus points to top 3 users at 23:59 WIB
+   * All regions in Indonesia follow this single WIB schedule
    */
   @Cron(CRON_SCHEDULE.DAILY_REWARD, {
-    name: CRON_JOB_NAMES.WIB,
-    timeZone: TIMEZONE_MAPPING[IndonesiaTimezone.WIB],
+    name: CRON_JOB_NAME,
+    timeZone: INDONESIA_TIMEZONE.IANA,
   })
-  async handleDailyRewardWIB(): Promise<IDailyRewardResult | null> {
-    this.logger.log(
-      '🏆 [WIB] Starting daily leaderboard reward at 23:59 WIB...',
-    );
-    return this.distributeDailyReward(IndonesiaTimezone.WIB);
-  }
-
-  /**
-   * WITA Daily Reward (23:59 WITA)
-   * @description Distributes bonus points to top 3 users in WITA timezone
-   */
-  @Cron(CRON_SCHEDULE.DAILY_REWARD, {
-    name: CRON_JOB_NAMES.WITA,
-    timeZone: TIMEZONE_MAPPING[IndonesiaTimezone.WITA],
-  })
-  async handleDailyRewardWITA(): Promise<IDailyRewardResult | null> {
-    this.logger.log(
-      '🏆 [WITA] Starting daily leaderboard reward at 23:59 WITA...',
-    );
-    return this.distributeDailyReward(IndonesiaTimezone.WITA);
-  }
-
-  /**
-   * WIT Daily Reward (23:59 WIT)
-   * @description Distributes bonus points to top 3 users in WIT timezone
-   */
-  @Cron(CRON_SCHEDULE.DAILY_REWARD, {
-    name: CRON_JOB_NAMES.WIT,
-    timeZone: TIMEZONE_MAPPING[IndonesiaTimezone.WIT],
-  })
-  async handleDailyRewardWIT(): Promise<IDailyRewardResult | null> {
-    this.logger.log(
-      '🏆 [WIT] Starting daily leaderboard reward at 23:59 WIT...',
-    );
-    return this.distributeDailyReward(IndonesiaTimezone.WIT);
+  async handleDailyReward(): Promise<IDailyRewardResult | null> {
+    this.logger.log('🏆 Starting daily leaderboard reward at 23:59 WIB...');
+    return this.distributeDailyReward();
   }
 
   /**
@@ -143,20 +112,15 @@ export class SchedulerService {
   }
 
   /**
-   * Distribute daily reward to top 3 users (called by cron handlers)
-   * @param {IndonesiaTimezone} timezone - Timezone identifier
+   * Distribute daily reward to top 3 users
    * @returns {Promise<IDailyRewardResult | null>} Reward result
    */
-  private async distributeDailyReward(
-    timezone: IndonesiaTimezone,
-  ): Promise<IDailyRewardResult | null> {
+  private async distributeDailyReward(): Promise<IDailyRewardResult | null> {
     try {
       const topUsers = await this.getTopUsers(TOP_USERS_COUNT);
 
       if (topUsers.length === 0) {
-        this.logger.log(
-          `[${timezone}] No users with points. Skipping reward distribution.`,
-        );
+        this.logger.log('No users with points. Skipping reward distribution.');
         return null;
       }
 
@@ -192,35 +156,28 @@ export class SchedulerService {
         /**
          * Send email notification to winner (fire and forget)
          */
-        this.sendRewardEmail(
-          user,
-          rank,
-          bonusPoints,
-          updatedUser.total_points,
-          timezone,
-        );
+        this.sendRewardEmail(user, rank, bonusPoints, updatedUser.total_points);
 
         this.logger.log(
-          `🥇 [${timezone}] Rank ${rank}: ${user.name} received ${bonusPoints} bonus points`,
+          `🥇 Rank ${rank}: ${user.name} received ${bonusPoints} bonus points`,
         );
       }
 
+      const now = new Date();
       const result: IDailyRewardResult = {
-        date: new Date().toISOString().split('T')[0],
-        timezone,
+        date: now.toISOString().split('T')[0],
+        timestamp: now.toISOString(),
         winners,
         totalBonusDistributed,
       };
 
       this.logger.log(
-        `✅ [${timezone}] Daily reward completed. Total bonus: ${totalBonusDistributed} points to ${winners.length} winners`,
+        `✅ Daily reward completed. Total bonus: ${totalBonusDistributed} points to ${winners.length} winners`,
       );
 
       return result;
     } catch (error) {
-      this.logger.error(
-        `[${timezone}] Daily reward distribution failed: ${error.message}`,
-      );
+      this.logger.error(`Daily reward distribution failed: ${error.message}`);
       throw error;
     }
   }
@@ -231,14 +188,12 @@ export class SchedulerService {
    * @param {1 | 2 | 3} rank - User rank
    * @param {number} bonusPoints - Bonus points awarded
    * @param {number} newTotalPoints - New total points
-   * @param {IndonesiaTimezone} timezone - Timezone for logging
    */
   private sendRewardEmail(
     user: ITopUserData,
     rank: 1 | 2 | 3,
     bonusPoints: number,
     newTotalPoints: number,
-    timezone: IndonesiaTimezone,
   ): void {
     this.mailerService
       .sendLeaderboardRewardEmail(user.email, {
@@ -251,7 +206,7 @@ export class SchedulerService {
       })
       .catch((err) =>
         this.logger.error(
-          `[${timezone}] Failed to send reward email to ${user.email}: ${err.message}`,
+          `Failed to send reward email to ${user.email}: ${err.message}`,
         ),
       );
   }

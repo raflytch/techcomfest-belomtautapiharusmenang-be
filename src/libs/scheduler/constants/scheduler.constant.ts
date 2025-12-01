@@ -18,22 +18,18 @@ export const DAILY_BONUS_POINTS: Record<1 | 2 | 3, number> = {
 
 /**
  * Cron schedule configuration
- * @description Daily reward distribution at 23:59 local time
+ * @description Daily reward distribution at 23:59 WIB
  */
 export const CRON_SCHEDULE = {
-  /** Cron expression: minute 59, hour 23 (11:59 PM) */
+  /** Cron expression: minute 59, hour 23 (11:59 PM WIB) */
   DAILY_REWARD: '59 23 * * *',
 } as const;
 
 /**
- * Cron job names
- * @description Unique identifiers for each scheduled job
+ * Cron job name
+ * @description Unique identifier for the daily reward job
  */
-export const CRON_JOB_NAMES = {
-  WIB: 'daily-reward-wib',
-  WITA: 'daily-reward-wita',
-  WIT: 'daily-reward-wit',
-} as const;
+export const CRON_JOB_NAME = 'daily-reward-wib';
 
 /**
  * Number of top users to reward daily

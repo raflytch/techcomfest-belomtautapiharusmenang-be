@@ -4,24 +4,15 @@
  */
 
 /**
- * Indonesia timezone enum
- * @description Three timezone regions in Indonesia
- * - WIB (Waktu Indonesia Barat): UTC+7 (Jakarta, Bandung, Surabaya)
- * - WITA (Waktu Indonesia Tengah): UTC+8 (Makassar, Bali, Pontianak)
- * - WIT (Waktu Indonesia Timur): UTC+9 (Jayapura, Ambon, Manokwari)
+ * Indonesia timezone constant
+ * @description WIB (Waktu Indonesia Barat): UTC+7
+ * All regions follow WIB time for leaderboard rewards
  */
-export enum IndonesiaTimezone {
-  WIB = 'WIB',
-  WITA = 'WITA',
-  WIT = 'WIT',
-}
-
-/**
- * Timezone mapping to IANA timezone identifiers
- * @description Maps Indonesia timezone abbreviations to IANA identifiers
- */
-export const TIMEZONE_MAPPING = {
-  [IndonesiaTimezone.WIB]: 'Asia/Jakarta',
-  [IndonesiaTimezone.WITA]: 'Asia/Makassar',
-  [IndonesiaTimezone.WIT]: 'Asia/Jayapura',
+export const INDONESIA_TIMEZONE = {
+  /** IANA timezone identifier for WIB */
+  IANA: 'Asia/Jakarta',
+  /** Timezone abbreviation */
+  NAME: 'WIB',
+  /** UTC offset in hours */
+  UTC_OFFSET: 7,
 } as const;
