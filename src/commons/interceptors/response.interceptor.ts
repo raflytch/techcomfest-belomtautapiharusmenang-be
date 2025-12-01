@@ -12,8 +12,8 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Response } from 'express';
-import { IApiResponse } from '@commons/intefaces/response.interface';
-import { IPaginationMeta } from '@commons/intefaces/pagination.interface';
+import { IApiResponse } from '../intefaces/response.interface';
+import { IPaginationMeta } from '../intefaces/pagination.interface';
 
 /**
  * Interface for paginated response data

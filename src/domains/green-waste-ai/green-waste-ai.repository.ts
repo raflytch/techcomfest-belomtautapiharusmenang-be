@@ -4,12 +4,12 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from '../../database/database.service';
 import {
   toPrismaQueryOptions,
   createPaginatedResult,
-} from '@commons/helpers/pagination.helper';
-import { IPaginatedResult } from '@commons/intefaces/pagination.interface';
+} from '../../commons/helpers/pagination.helper';
+import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
 import { green_action } from '@prisma/client';
 import { QueryGreenActionDto } from './dto/query-green-action.dto';
 import {

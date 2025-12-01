@@ -4,10 +4,10 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
+import { DatabaseService } from 'src/database/database.service';
 import { Prisma, user, UserRole } from '@prisma/client';
-import { IPaginationOptions } from '@commons/intefaces/pagination.interface';
-import { toPrismaQueryOptions } from '@commons/helpers/pagination.helper';
+import { IPaginationOptions } from 'src/commons/intefaces/pagination.interface';
+import { toPrismaQueryOptions } from 'src/commons/helpers/pagination.helper';
 
 /**
  * User creation data interface

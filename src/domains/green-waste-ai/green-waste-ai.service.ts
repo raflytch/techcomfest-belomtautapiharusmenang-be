@@ -10,8 +10,8 @@ import {
   NotFoundException,
   ForbiddenException,
 } from '@nestjs/common';
-import { GoogleGenAiService } from '@libs/google-genai/google-gen-ai.service';
-import { CloudinaryService } from '@libs/cloudinary/cloudinary.service';
+import { GoogleGenAiService } from '../../libs/google-genai/google-gen-ai.service';
+import { CloudinaryService } from '../../libs/cloudinary/cloudinary.service';
 import { GreenWasteAiRepository } from './green-waste-ai.repository';
 import { CreateGreenActionDto } from './dto/create-green-action.dto';
 import { QueryGreenActionDto } from './dto/query-green-action.dto';
@@ -25,8 +25,8 @@ import {
   IGreenActionResponse,
   IUserGreenActionStats,
 } from './interfaces/green-action.interface';
-import { IPaginatedResult } from '@commons/intefaces/pagination.interface';
-import { MediaType } from '@libs/google-genai/interfaces/google-gen-ai.interface';
+import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
+import { MediaType } from '../../libs/google-genai/interfaces/google-gen-ai.interface';
 
 /**
  * Green Waste AI Service

@@ -5,8 +5,8 @@
 
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron } from '@nestjs/schedule';
-import { DatabaseService } from '@database/database.service';
-import { MailerService } from '@libs/mailer/mailer.service';
+import { DatabaseService } from '../../database/database.service';
+import { MailerService } from '../mailer/mailer.service';
 import { INDONESIA_TIMEZONE } from './enums/scheduler.enum';
 import {
   IDailyRewardResult,

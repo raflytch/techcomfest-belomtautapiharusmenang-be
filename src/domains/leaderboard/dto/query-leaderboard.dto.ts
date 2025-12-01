@@ -3,7 +3,7 @@
  * @description Data transfer objects for leaderboard queries
  */
 
-import { PaginationDto } from '@commons/dto/pagination.dto';
+import { PaginationDto } from '../../../commons/dto/pagination.dto';
 
 /**
  * Query leaderboard DTO

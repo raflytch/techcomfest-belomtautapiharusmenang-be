@@ -6,7 +6,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsInt, IsOptional, IsString, IsUUID, Min } from 'class-validator';
 import { Transform, Type } from 'class-transformer';
-import { PaginationDto } from '@commons/dto/pagination.dto';
+import { PaginationDto } from '../../../commons/dto/pagination.dto';
 
 /**
  * Query voucher DTO

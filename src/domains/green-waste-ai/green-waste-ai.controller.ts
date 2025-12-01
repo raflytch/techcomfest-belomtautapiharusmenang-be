@@ -28,11 +28,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@commons/guards/jwt-auth.guard';
-import { RolesGuard } from '@commons/guards/roles.guard';
-import { Roles } from '@commons/decorators/roles.decorator';
-import { CurrentUser } from '@commons/decorators/current-user.decorator';
-import { JwtPayload } from '@commons/strategies/jwt.strategy';
+import { JwtAuthGuard } from '../../commons/guards/jwt-auth.guard';
+import { RolesGuard } from '../../commons/guards/roles.guard';
+import { Roles } from '../../commons/decorators/roles.decorator';
+import { CurrentUser } from '../../commons/decorators/current-user.decorator';
+import { JwtPayload } from '../../commons/strategies/jwt.strategy';
 import { GreenWasteAiService } from './green-waste-ai.service';
 import { CreateGreenActionDto } from './dto/create-green-action.dto';
 import { QueryGreenActionDto } from './dto/query-green-action.dto';

@@ -9,8 +9,8 @@ import { PassportModule } from '@nestjs/passport';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { UserRepository } from './user.repository';
-import { JwtStrategy } from '@/commons/strategies/jwt.strategy';
-import { GoogleStrategy } from '@/commons/strategies/google.strategy';
+import { JwtStrategy } from '../../commons/strategies/jwt.strategy';
+import { GoogleStrategy } from '../../commons/strategies/google.strategy';
 
 /**
  * User module

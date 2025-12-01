@@ -17,9 +17,9 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '@commons/guards/jwt-auth.guard';
-import { CurrentUser } from '@commons/decorators/current-user.decorator';
-import { JwtPayload } from '@commons/strategies/jwt.strategy';
+import { JwtAuthGuard } from '../../commons/guards/jwt-auth.guard';
+import { CurrentUser } from '../../commons/decorators/current-user.decorator';
+import { JwtPayload } from '../../commons/strategies/jwt.strategy';
 import { LeaderboardService } from './leaderboard.service';
 import { QueryLeaderboardDto } from './dto';
 

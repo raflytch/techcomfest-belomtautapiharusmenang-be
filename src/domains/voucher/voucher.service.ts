@@ -10,8 +10,8 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { VoucherRepository } from './voucher.repository';
-import { CloudinaryService } from '@libs/cloudinary/cloudinary.service';
-import { MailerService } from '@libs/mailer/mailer.service';
+import { CloudinaryService } from '../../libs/cloudinary/cloudinary.service';
+import { MailerService } from '../../libs/mailer/mailer.service';
 import {
   CreateVoucherDto,
   UpdateVoucherDto,

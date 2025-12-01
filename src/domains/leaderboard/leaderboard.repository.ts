@@ -4,9 +4,9 @@
  */
 
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '@database/database.service';
-import { IPaginatedResult } from '@commons/intefaces/pagination.interface';
-import { createPaginatedResult } from '@commons/helpers/pagination.helper';
+import { DatabaseService } from '../../database/database.service';
+import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
+import { createPaginatedResult } from '../../commons/helpers/pagination.helper';
 import { QueryLeaderboardDto } from './dto';
 
 /**

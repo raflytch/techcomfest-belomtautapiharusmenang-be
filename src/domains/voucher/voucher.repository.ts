@@ -5,9 +5,9 @@
 
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
-import { DatabaseService } from '@database/database.service';
-import { IPaginatedResult } from '@commons/intefaces/pagination.interface';
-import { createPaginatedResult } from '@commons/helpers/pagination.helper';
+import { DatabaseService } from '../../database/database.service';
+import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
+import { createPaginatedResult } from '../../commons/helpers/pagination.helper';
 import { QueryVoucherDto, QueryMyClaimsDto } from './dto';
 import { DiscountType } from './enums';
 

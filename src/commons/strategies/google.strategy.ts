@@ -6,8 +6,8 @@
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy, VerifyCallback, Profile } from 'passport-google-oauth20';
-import { AppConfigService } from '@config/config.service';
-import { IGoogleUserInfo } from '@/domains/user/interfaces';
+import { AppConfigService } from 'src/config/config.service';
+import { IGoogleUserInfo } from 'src/domains/user/interfaces';
 
 /**
  * Google OAuth Strategy using Passport

@@ -7,7 +7,7 @@ import {
   IPaginatedResult,
   IPaginationMeta,
   IPaginationOptions,
-} from '@commons/intefaces/pagination.interface';
+} from '../intefaces/pagination.interface';
 
 /**
  * Create pagination metadata from query results

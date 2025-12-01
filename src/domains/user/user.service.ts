@@ -15,9 +15,9 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { user, UserRole } from '@prisma/client';
 import { UserRepository } from './user.repository';
-import { MailerService } from '@/libs/mailer/mailer.service';
-import { CloudinaryService } from '@/libs/cloudinary/cloudinary.service';
-import { AppConfigService } from '@config/config.service';
+import { MailerService } from 'src/libs/mailer/mailer.service';
+import { CloudinaryService } from 'src/libs/cloudinary/cloudinary.service';
+import { AppConfigService } from 'src/config/config.service';
 import {
   RegisterUserDto,
   SendRegisterOtpDto,
@@ -33,9 +33,9 @@ import {
   RequestDeleteAccountDto,
   ConfirmDeleteAccountDto,
 } from './dto/delete-account.dto';
-import { PaginationDto } from '@commons/dto/pagination.dto';
-import { createPaginatedResult } from '@commons/helpers/pagination.helper';
-import { IPaginatedResult } from '@commons/intefaces/pagination.interface';
+import { PaginationDto } from 'src/commons/dto/pagination.dto';
+import { createPaginatedResult } from 'src/commons/helpers/pagination.helper';
+import { IPaginatedResult } from 'src/commons/intefaces/pagination.interface';
 import { ISafeUser, IGoogleUserInfo } from './interfaces/index';
 
 /**

@@ -5,7 +5,7 @@
 
 import { Injectable, BadRequestException, OnModuleInit } from '@nestjs/common';
 import { v2 as cloudinary, UploadApiResponse } from 'cloudinary';
-import { AppConfigService } from '@config/config.service';
+import { AppConfigService } from '../../config/config.service';
 
 /**
  * Upload result interface

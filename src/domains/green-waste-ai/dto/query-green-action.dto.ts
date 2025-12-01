@@ -5,7 +5,7 @@
 
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '@commons/dto/pagination.dto';
+import { PaginationDto } from '../../../commons/dto/pagination.dto';
 import {
   GreenActionCategory,
   GreenActionStatus,

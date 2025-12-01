@@ -5,8 +5,8 @@
 
 import { Injectable, BadRequestException } from '@nestjs/common';
 import * as nodemailer from 'nodemailer';
-import { AppConfigService } from '@config/config.service';
-import { DatabaseService } from '@database/database.service';
+import { AppConfigService } from '../../config/config.service';
+import { DatabaseService } from '../../database/database.service';
 
 /**
  * OTP purpose types for different verification flows

@@ -10,7 +10,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from '@/commons/decorators/roles.decorator';
+import { ROLES_KEY } from '../decorators/roles.decorator';
 
 /**
  * Roles guard for RBAC
