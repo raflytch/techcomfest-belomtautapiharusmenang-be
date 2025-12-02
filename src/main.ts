@@ -13,6 +13,17 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   /**
+   * Enable CORS for all origins
+   * @description Allows cross-origin requests from any domain
+   */
+  app.enableCors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: false,
+  });
+
+  /**
    * Set global API prefix
    * All routes will be prefixed with /api
    */
