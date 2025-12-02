@@ -160,7 +160,7 @@ export class CloudinaryService implements OnModuleInit {
    */
   async uploadAvatar(file: Express.Multer.File): Promise<UploadResult> {
     return this.uploadImage(file, {
-      folder: 'impact2action/avatars',
+      folder: 'sirkula/avatars',
       transformation: {
         width: 400,
         height: 400,
@@ -180,7 +180,7 @@ export class CloudinaryService implements OnModuleInit {
    */
   async uploadUmkmLogo(file: Express.Multer.File): Promise<UploadResult> {
     return this.uploadImage(file, {
-      folder: 'impact2action/umkm-logos',
+      folder: 'sirkula/umkm-logos',
       transformation: {
         width: 300,
         height: 300,
@@ -199,7 +199,7 @@ export class CloudinaryService implements OnModuleInit {
    */
   async uploadActionProof(file: Express.Multer.File): Promise<UploadResult> {
     return this.uploadImage(file, {
-      folder: 'impact2action/action-proofs',
+      folder: 'sirkula/action-proofs',
       transformation: {
         width: 1200,
         height: 1200,
@@ -217,7 +217,7 @@ export class CloudinaryService implements OnModuleInit {
    */
   async uploadActionVideo(file: Express.Multer.File): Promise<UploadResult> {
     return this.uploadVideo(file, {
-      folder: 'impact2action/action-videos',
+      folder: 'sirkula/action-videos',
       transformation: {
         width: 1280,
         height: 720,
@@ -260,7 +260,7 @@ export class CloudinaryService implements OnModuleInit {
     return new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: options.folder || 'impact2action',
+          folder: options.folder || 'sirkula',
           resource_type: options.resourceType || 'auto',
           transformation: options.transformation,
         },

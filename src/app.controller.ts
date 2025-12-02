@@ -19,7 +19,7 @@ export class AppController {
   @Get()
   @ApiOperation({
     summary: 'Get Application Info',
-    description: 'Mendapatkan informasi dasar aplikasi Impact2Action',
+    description: 'Mendapatkan informasi dasar aplikasi Sirkula',
   })
   @ApiResponse({
     status: 200,
@@ -32,7 +32,7 @@ export class AppController {
         data: {
           type: 'object',
           properties: {
-            name: { type: 'string', example: 'Impact2Action' },
+            name: { type: 'string', example: 'Sirkula' },
             tagline: {
               type: 'string',
               example: 'Sense Every Action, Reward Every Impact',

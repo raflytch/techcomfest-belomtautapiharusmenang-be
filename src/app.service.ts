@@ -1,5 +1,5 @@
 /**
- * @fileoverview Main application service for Impact2Action
+ * @fileoverview Main application service for Sirkula
  * @description Provides core application information and health checks
  */
 
@@ -24,7 +24,7 @@ export class AppService {
    */
   getAppInfo(): IAppInfo {
     return {
-      name: 'Impact2Action',
+      name: 'Sirkula',
       tagline: 'Sense Every Action, Reward Every Impact',
       version: '1.0.0',
       description:

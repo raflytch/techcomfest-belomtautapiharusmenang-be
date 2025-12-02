@@ -83,13 +83,13 @@ export class MailerService {
   private getEmailSubject(purpose: OtpPurpose): string {
     switch (purpose) {
       case 'REGISTER':
-        return '🌱 Impact2Action - Verify Your Email';
+        return '🌱 Sirkula - Verify Your Email';
       case 'DELETE_ACCOUNT':
-        return '⚠️ Impact2Action - Account Deletion Confirmation';
+        return '⚠️ Sirkula - Account Deletion Confirmation';
       case 'VERIFY_EMAIL':
-        return '📧 Impact2Action - Email Verification';
+        return '📧 Sirkula - Email Verification';
       default:
-        return '🌱 Impact2Action - Verification Code';
+        return '🌱 Sirkula - Verification Code';
     }
   }
 
@@ -111,12 +111,12 @@ export class MailerService {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Impact2Action Verification</title>
+          <title>Sirkula Verification</title>
         </head>
         <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
           <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
             <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
-              <h1 style="color: white; margin: 0; font-size: 28px;">🌱 Impact2Action</h1>
+              <h1 style="color: white; margin: 0; font-size: 28px;">🌱 Sirkula</h1>
               <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">Sense Every Action, Reward Every Impact</p>
             </div>
             
@@ -139,7 +139,7 @@ export class MailerService {
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 0;">© 2025 Impact2Action. All rights reserved.</p>
+              <p style="margin: 0;">© 2025 Sirkula. All rights reserved.</p>
               <p style="margin: 5px 0 0 0;">Making every green action count! 🌍</p>
             </div>
           </div>
@@ -169,7 +169,7 @@ export class MailerService {
      */
     try {
       await this.transporter.sendMail({
-        from: `"Impact2Action" <${this.configService.emailUser}>`,
+        from: `"Sirkula" <${this.configService.emailUser}>`,
         to: email,
         subject: this.getEmailSubject(purpose),
         html: this.getEmailHtml(otpCode, purpose),
@@ -303,9 +303,9 @@ export class MailerService {
 
     try {
       await this.transporter.sendMail({
-        from: `"Impact2Action" <${this.configService.emailUser}>`,
+        from: `"Sirkula" <${this.configService.emailUser}>`,
         to: email,
-        subject: '🎉 Impact2Action - Voucher Redeemed Successfully!',
+        subject: '🎉 Sirkula - Voucher Redeemed Successfully!',
         html,
       });
 
@@ -351,7 +351,7 @@ export class MailerService {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Voucher Redeemed - Impact2Action</title>
+          <title>Voucher Redeemed - Sirkula</title>
         </head>
         <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
           <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -405,7 +405,7 @@ export class MailerService {
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 0;">© 2025 Impact2Action. All rights reserved.</p>
+              <p style="margin: 0;">© 2025 Sirkula. All rights reserved.</p>
               <p style="margin: 5px 0 0 0;">Making every green action count! 🌍</p>
             </div>
           </div>
@@ -435,9 +435,9 @@ export class MailerService {
 
     try {
       await this.transporter.sendMail({
-        from: `"Impact2Action" <${this.configService.emailUser}>`,
+        from: `"Sirkula" <${this.configService.emailUser}>`,
         to: email,
-        subject: `🏆 Impact2Action - Congratulations! You're #${rewardData.rank} Today!`,
+        subject: `🏆 Sirkula - Congratulations! You're #${rewardData.rank} Today!`,
         html,
       });
 
@@ -479,7 +479,7 @@ export class MailerService {
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Leaderboard Reward - Impact2Action</title>
+          <title>Leaderboard Reward - Sirkula</title>
         </head>
         <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
           <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
@@ -537,7 +537,7 @@ export class MailerService {
             </div>
             
             <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
-              <p style="margin: 0;">© 2025 Impact2Action. All rights reserved.</p>
+              <p style="margin: 0;">© 2025 Sirkula. All rights reserved.</p>
               <p style="margin: 5px 0 0 0;">Making every green action count! 🌍</p>
             </div>
           </div>

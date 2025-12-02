@@ -1,5 +1,5 @@
 /**
- * @fileoverview Main bootstrap file for Impact2Action NestJS application
+ * @fileoverview Main bootstrap file for Sirkula NestJS application
  * @description Entry point that configures global prefix, Swagger, validation pipe, and response interceptor
  */
 
@@ -44,13 +44,13 @@ async function bootstrap() {
    * @description Available at /api-docs endpoint
    */
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('Impact2Action API')
+    .setTitle('Sirkula API')
     .setDescription(
       `
       <p><strong>Sense Every Action, Reward Every Impact</strong></p>
-      <p>API documentation untuk aplikasi Impact2Action</p>
+      <p>API documentation untuk aplikasi Sirkula</p>
       <hr />
-      <p>Impact2Action adalah platform untuk mendorong aksi hijau di masyarakat
+      <p>Sirkula adalah platform untuk mendorong aksi hijau di masyarakat
       dengan memberikan reward berupa voucher dari UMKM lokal.</p>
       `,
     )
@@ -75,7 +75,7 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, document, {
-    customSiteTitle: 'Impact2Action API Docs',
+    customSiteTitle: 'Sirkula API Docs',
     customfavIcon: 'https://nestjs.com/img/logo-small.svg',
     customCssUrl:
       'https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.11.0/swagger-ui.min.css',
@@ -106,7 +106,7 @@ async function bootstrap() {
   console.log(`
   ╔═══════════════════════════════════════════════════════════╗
   ║                                                           ║
-  ║   🌱 Impact2Action API Server                             ║
+  ║   🌱 Sirkula API Server                                   ║
   ║   "Sense Every Action, Reward Every Impact"               ║
   ║                                                           ║
   ╠═══════════════════════════════════════════════════════════╣

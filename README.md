@@ -1,10 +1,10 @@
-# 🌱 Impact2Action Backend
+# 🌱 Sirkula Backend
 
 Platform aksi hijau berbasis AI untuk mendorong partisipasi warga dalam pengelolaan sampah, penanaman pohon, dan konsumsi produk ramah lingkungan.
 
 ## 📋 Deskripsi
 
-**Impact2Action** adalah backend API yang mendukung platform eco-friendly dengan fitur:
+**Sirkula** adalah backend API yang mendukung platform eco-friendly dengan fitur:
 
 - 🤖 **AI-Powered Verification** - Verifikasi otomatis aksi hijau menggunakan Google Generative AI
 - 🔐 **Authentication** - Google OAuth & Email OTP
@@ -48,7 +48,7 @@ Buat file `.env` di root directory:
 # ===========================================
 # DATABASE
 # ===========================================
-DATABASE_URL="postgresql://user:password@localhost:5432/impact2action?schema=public"
+DATABASE_URL="postgresql://user:password@localhost:5432/sirkula?schema=public"
 
 # ===========================================
 # APPLICATION
