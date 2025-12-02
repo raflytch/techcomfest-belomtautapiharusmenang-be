@@ -13,17 +13,12 @@ import {
   MinLength,
   ValidateIf,
 } from 'class-validator';
+import { UserRole } from '@prisma/client';
 
 /**
- * User role enum matching Prisma schema
- * @description Available roles for user registration
+ * Re-export UserRole from Prisma for convenience
  */
-export enum UserRole {
-  WARGA = 'WARGA',
-  UMKM = 'UMKM',
-  DLH = 'DLH',
-  ADMIN = 'ADMIN',
-}
+export { UserRole };
 
 /**
  * Send OTP for registration DTO
