@@ -5,7 +5,7 @@
 
 /**
  * Daily bonus points configuration for top 3 users
- * @description Small bonus rewards for fairness
+ * @description Bonus rewards distributed once per day at 23:59 WIB
  * - Rank 1: 15 points
  * - Rank 2: 10 points
  * - Rank 3: 5 points
@@ -18,10 +18,10 @@ export const DAILY_BONUS_POINTS: Record<1 | 2 | 3, number> = {
 
 /**
  * Cron schedule configuration
- * @description Daily reward distribution at 23:59 WIB
+ * @description Daily reward distribution at 23:59 WIB (once per 24 hours)
  */
 export const CRON_SCHEDULE = {
-  /** Cron expression: minute 59, hour 23 (11:59 PM WIB) */
+  /** Cron expression: minute 59, hour 23 (23:59 / 11:59 PM) */
   DAILY_REWARD: '59 23 * * *',
 } as const;
 

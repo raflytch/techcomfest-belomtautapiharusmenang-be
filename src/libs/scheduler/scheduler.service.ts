@@ -22,7 +22,7 @@ import {
 
 /**
  * Scheduler service
- * @description Manages daily leaderboard reward distribution at 23:59 WIB
+ * @description Manages daily leaderboard reward distribution at 23:59 WIB (once per 24 hours)
  */
 @Injectable()
 export class SchedulerService {
@@ -38,7 +38,7 @@ export class SchedulerService {
 
   /**
    * Daily Reward (23:59 WIB)
-   * @description Distributes bonus points to top 3 users at 23:59 WIB
+   * @description Distributes bonus points to top 3 users at 23:59 WIB (once per 24 hours)
    * All regions in Indonesia follow this single WIB schedule
    */
   @Cron(CRON_SCHEDULE.DAILY_REWARD, {
