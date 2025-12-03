@@ -116,6 +116,9 @@ export class GreenWasteAiRepository {
       user_id: userId,
       ...(query.category && { category: query.category }),
       ...(query.status && { status: query.status }),
+      ...(query.subCategory && {
+        ai_labels: { contains: query.subCategory },
+      }),
     };
 
     const prismaOptions = toPrismaQueryOptions(query);
@@ -142,6 +145,9 @@ export class GreenWasteAiRepository {
     const where = {
       ...(query.category && { category: query.category }),
       ...(query.status && { status: query.status }),
+      ...(query.subCategory && {
+        ai_labels: { contains: query.subCategory },
+      }),
     };
 
     const prismaOptions = toPrismaQueryOptions(query);

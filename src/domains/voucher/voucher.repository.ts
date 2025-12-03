@@ -114,11 +114,21 @@ export class VoucherRepository {
       search,
     } = query;
 
+    /**
+     * Build points_required filter with combined gte and lte
+     */
+    const pointsFilter: { gte?: number; lte?: number } | undefined =
+      minPoints !== undefined || maxPoints !== undefined
+        ? {
+            ...(minPoints !== undefined && { gte: minPoints }),
+            ...(maxPoints !== undefined && { lte: maxPoints }),
+          }
+        : undefined;
+
     const where: Prisma.voucherWhereInput = {
       ...(isActive !== undefined && { is_active: isActive }),
       ...(umkmId && { umkm_id: umkmId }),
-      ...(minPoints !== undefined && { points_required: { gte: minPoints } }),
-      ...(maxPoints !== undefined && { points_required: { lte: maxPoints } }),
+      ...(pointsFilter && { points_required: pointsFilter }),
       ...(category && { umkm: { umkm_category: category } }),
       ...(search && {
         OR: [
