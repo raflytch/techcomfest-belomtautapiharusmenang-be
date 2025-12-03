@@ -132,8 +132,18 @@ export class VoucherRepository {
       ...(category && { umkm: { umkm_category: category } }),
       ...(search && {
         OR: [
-          { name: { contains: search, mode: 'insensitive' } },
-          { description: { contains: search, mode: 'insensitive' } },
+          {
+            name: {
+              contains: search,
+              mode: 'insensitive' as Prisma.QueryMode,
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: 'insensitive' as Prisma.QueryMode,
+            },
+          },
         ],
       }),
     };
@@ -175,11 +185,46 @@ export class VoucherRepository {
     umkmId: string,
     query: QueryVoucherDto,
   ): Promise<IPaginatedResult<any>> {
-    const { page = 1, limit = 10, isActive } = query;
+    const {
+      page = 1,
+      limit = 10,
+      isActive,
+      minPoints,
+      maxPoints,
+      search,
+    } = query;
+
+    /**
+     * Build points_required filter with combined gte and lte
+     */
+    const pointsFilter: { gte?: number; lte?: number } | undefined =
+      minPoints !== undefined || maxPoints !== undefined
+        ? {
+            ...(minPoints !== undefined && { gte: minPoints }),
+            ...(maxPoints !== undefined && { lte: maxPoints }),
+          }
+        : undefined;
 
     const where: Prisma.voucherWhereInput = {
       umkm_id: umkmId,
       ...(isActive !== undefined && { is_active: isActive }),
+      ...(pointsFilter && { points_required: pointsFilter }),
+      ...(search && {
+        OR: [
+          {
+            name: {
+              contains: search,
+              mode: 'insensitive' as Prisma.QueryMode,
+            },
+          },
+          {
+            description: {
+              contains: search,
+              mode: 'insensitive' as Prisma.QueryMode,
+            },
+          },
+        ],
+      }),
     };
 
     const skip = (page - 1) * limit;
