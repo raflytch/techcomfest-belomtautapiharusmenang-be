@@ -257,30 +257,41 @@ export class VoucherController {
   }
 
   /**
-   * Verify claim (UMKM only)
+   * Use voucher claim (WARGA only)
    * @param {JwtPayload} user - Current user
    * @param {string} claimId - Claim ID
-   * @returns {Promise<object>} Verified claim
+   * @returns {Promise<object>} Used claim
    */
-  @Post('umkm/claims/:claimId/verify')
+  @Post('warga/claims/:claimId/use')
   @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('UMKM')
+  @Roles('WARGA')
   @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Verify claim (UMKM)',
-    description: 'Mark claim as used',
+    summary: 'Use voucher claim (WARGA)',
+    description: 'Mark claimed voucher as used',
   })
   @ApiParam({ name: 'claimId', description: 'Claim UUID' })
-  @ApiResponse({ status: HttpStatus.OK, description: 'Claim verified' })
-  async verifyClaim(
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'Voucher used successfully',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'Voucher already used or expired',
+  })
+  @ApiResponse({
+    status: HttpStatus.FORBIDDEN,
+    description: 'Not your voucher claim',
+  })
+  async useVoucher(
     @CurrentUser() user: JwtPayload,
     @Param('claimId', ParseUUIDPipe) claimId: string,
   ) {
-    const claim = await this.voucherService.verifyClaim(claimId, user.sub);
+    const claim = await this.voucherService.useVoucher(claimId, user.sub);
     return {
       statusCode: HttpStatus.OK,
-      message: 'Claim verified successfully',
+      message: 'Voucher used successfully',
       data: claim,
     };
   }

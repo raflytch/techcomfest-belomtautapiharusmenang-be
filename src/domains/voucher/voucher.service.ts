@@ -375,33 +375,69 @@ export class VoucherService {
   }
 
   /**
-   * Verify and use claim (UMKM only)
+   * Use voucher claim (WARGA only)
    * @param {string} claimId - Claim ID
-   * @param {string} umkmId - UMKM user ID
+   * @param {string} userId - User ID
    * @returns {Promise<IVoucherClaimResponse>} Updated claim
    */
-  async verifyClaim(
+  async useVoucher(
     claimId: string,
-    umkmId: string,
+    userId: string,
   ): Promise<IVoucherClaimResponse> {
     const claim = await this.voucherRepository.findClaimById(claimId);
     if (!claim) {
       throw new NotFoundException('Claim not found');
     }
 
-    if (claim.voucher.umkm_id !== umkmId) {
+    if (claim.user.id !== userId) {
       throw new ForbiddenException(
-        'You can only verify claims for your own vouchers',
+        'You can only use your own claimed vouchers',
       );
     }
 
     if (claim.status !== 'PENDING') {
       throw new BadRequestException(
-        `Claim is already ${claim.status.toLowerCase()}`,
+        `Voucher claim is already ${claim.status.toLowerCase()}`,
       );
     }
 
+    // Check if voucher is still valid
+    const now = new Date();
+    if (now > claim.voucher.valid_until) {
+      throw new BadRequestException('Voucher has expired');
+    }
+
     const updated = await this.voucherRepository.markClaimUsed(claimId);
+
+    /**
+     * Send notification email to UMKM
+     * Fire and forget - don't block the response
+     */
+    if (updated.voucher.umkm?.email) {
+      this.mailerService
+        .sendVoucherUsedNotificationEmail(updated.voucher.umkm.email, {
+          umkmName:
+            updated.voucher.umkm?.umkm_name ||
+            updated.voucher.umkm?.name ||
+            'UMKM Partner',
+          voucherName: updated.voucher.name,
+          userName: claim.user.name,
+          userEmail: claim.user.email,
+          redemptionCode: this.generateRedemptionCode(claimId),
+          discountType: updated.voucher.discount_percentage
+            ? 'PERCENTAGE'
+            : 'FIXED_AMOUNT',
+          discountValue:
+            updated.voucher.discount_percentage ||
+            updated.voucher.discount_amount ||
+            0,
+          usedAt: new Date(),
+        })
+        .catch((err) =>
+          console.error('Failed to send UMKM notification email:', err),
+        );
+    }
+
     return this.mapClaimResponse(updated);
   }
 

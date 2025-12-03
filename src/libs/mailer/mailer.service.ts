@@ -415,6 +415,147 @@ export class MailerService {
   }
 
   /**
+   * Send voucher used notification email to UMKM
+   * @param {string} email - UMKM email address
+   * @param {object} notificationData - Voucher usage details
+   * @returns {Promise<void>}
+   */
+  async sendVoucherUsedNotificationEmail(
+    email: string,
+    notificationData: {
+      umkmName: string;
+      voucherName: string;
+      userName: string;
+      userEmail: string;
+      redemptionCode: string;
+      discountType: string;
+      discountValue: number;
+      usedAt: Date;
+    },
+  ): Promise<void> {
+    const html = this.getVoucherUsedNotificationHtml(notificationData);
+
+    try {
+      await this.transporter.sendMail({
+        from: `"Sirkula" <${this.configService.emailUser}>`,
+        to: email,
+        subject: '🎫 Sirkula - Voucher Used by Customer!',
+        html,
+      });
+
+      if (this.configService.isDevelopment) {
+        console.log(
+          `🔔 [DEV] Voucher used notification email sent to ${email}`,
+        );
+      }
+    } catch (error) {
+      console.error('Voucher used notification email error:', error);
+    }
+  }
+
+  /**
+   * Get voucher used notification email HTML template
+   * @param {object} data - Voucher usage data
+   * @returns {string} HTML email content
+   */
+  private getVoucherUsedNotificationHtml(data: {
+    umkmName: string;
+    voucherName: string;
+    userName: string;
+    userEmail: string;
+    redemptionCode: string;
+    discountType: string;
+    discountValue: number;
+    usedAt: Date;
+  }): string {
+    const discountText =
+      data.discountType === 'PERCENTAGE'
+        ? `${data.discountValue}% OFF`
+        : `Rp ${data.discountValue.toLocaleString('id-ID')}`;
+
+    const usedAtFormatted = data.usedAt.toLocaleDateString('id-ID', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Voucher Used - Sirkula</title>
+        </head>
+        <body style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4;">
+          <div style="max-width: 600px; margin: 0 auto; padding: 20px;">
+            <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); padding: 30px; border-radius: 10px 10px 0 0; text-align: center;">
+              <h1 style="color: white; margin: 0; font-size: 28px;">🎫 Voucher Used!</h1>
+              <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 14px;">A customer has redeemed your voucher</p>
+            </div>
+            
+            <div style="background: white; padding: 40px 30px; border-radius: 0 0 10px 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+              <p style="color: #666; line-height: 1.6; margin: 0 0 20px 0; font-size: 16px;">
+                Hi <strong>${data.umkmName}</strong>! 👋
+              </p>
+              <p style="color: #666; line-height: 1.6; margin: 0 0 30px 0;">
+                Great news! A customer has successfully used one of your vouchers.
+              </p>
+              
+              <div style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%); border: 2px solid #22c55e; border-radius: 15px; padding: 25px; margin: 0 0 30px 0;">
+                <h3 style="color: #166534; margin: 0 0 15px 0; font-size: 18px;">🎫 ${data.voucherName}</h3>
+                <div style="background: white; border-radius: 10px; padding: 20px; text-align: center;">
+                  <p style="color: #666; margin: 0 0 10px 0; font-size: 12px; text-transform: uppercase; letter-spacing: 1px;">Redemption Code</p>
+                  <div style="background: #f8fafc; border: 2px dashed #22c55e; border-radius: 8px; padding: 15px; margin: 0 0 15px 0;">
+                    <span style="font-size: 24px; font-weight: bold; letter-spacing: 3px; color: #22c55e; font-family: monospace;">${data.redemptionCode}</span>
+                  </div>
+                  <p style="color: #22c55e; font-size: 20px; font-weight: bold; margin: 0;">${discountText}</p>
+                </div>
+              </div>
+
+              <div style="background: #f8fafc; border-radius: 10px; padding: 20px; margin: 0 0 30px 0;">
+                <h4 style="color: #333; margin: 0 0 15px 0; font-size: 14px;">👤 Customer Details</h4>
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="color: #666; padding: 8px 0;">Name:</td>
+                    <td style="color: #333; font-weight: bold; text-align: right;">${data.userName}</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #666; padding: 8px 0;">Email:</td>
+                    <td style="color: #333; font-weight: bold; text-align: right;">${data.userEmail}</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #666; padding: 8px 0; border-top: 1px solid #e5e7eb;">Used At:</td>
+                    <td style="color: #22c55e; font-weight: bold; text-align: right;">${usedAtFormatted}</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div style="background: #fef3c7; border-radius: 10px; padding: 15px; margin: 0 0 20px 0;">
+                <p style="color: #92400e; margin: 0; font-size: 14px;">
+                  ✅ <strong>Voucher Status:</strong> Successfully redeemed and marked as used.
+                </p>
+              </div>
+
+              <p style="color: #999; font-size: 14px; margin: 0;">
+                The customer has been notified and provided with the redemption code. Please honor the discount when they present this code.
+              </p>
+            </div>
+            
+            <div style="text-align: center; padding: 20px; color: #999; font-size: 12px;">
+              <p style="margin: 0;">© 2025 Sirkula. All rights reserved.</p>
+              <p style="margin: 5px 0 0 0;">Making every green action count! 🌍</p>
+            </div>
+          </div>
+        </body>
+      </html>
+    `;
+  }
+
+  /**
    * Send leaderboard reward email to winner
    * @param {string} email - Winner email address
    * @param {object} rewardData - Reward details

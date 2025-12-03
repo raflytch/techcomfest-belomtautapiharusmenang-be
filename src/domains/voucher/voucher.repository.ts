@@ -87,6 +87,7 @@ export class VoucherRepository {
           select: {
             id: true,
             name: true,
+            email: true,
             umkm_name: true,
             umkm_logo_url: true,
             umkm_address: true,
@@ -158,6 +159,7 @@ export class VoucherRepository {
             select: {
               id: true,
               name: true,
+              email: true,
               umkm_name: true,
               umkm_logo_url: true,
               umkm_address: true,
@@ -237,6 +239,7 @@ export class VoucherRepository {
             select: {
               id: true,
               name: true,
+              email: true,
               umkm_name: true,
               umkm_logo_url: true,
               umkm_address: true,
@@ -361,6 +364,7 @@ export class VoucherRepository {
                 select: {
                   id: true,
                   name: true,
+                  email: true,
                   umkm_name: true,
                   umkm_logo_url: true,
                   umkm_address: true,
@@ -399,6 +403,7 @@ export class VoucherRepository {
               select: {
                 id: true,
                 name: true,
+                email: true,
                 umkm_name: true,
                 umkm_logo_url: true,
                 umkm_address: true,
@@ -441,6 +446,7 @@ export class VoucherRepository {
                 select: {
                   id: true,
                   name: true,
+                  email: true,
                   umkm_name: true,
                   umkm_logo_url: true,
                   umkm_address: true,
@@ -517,6 +523,7 @@ export class VoucherRepository {
               select: {
                 id: true,
                 name: true,
+                email: true,
                 umkm_name: true,
                 umkm_logo_url: true,
                 umkm_address: true,
