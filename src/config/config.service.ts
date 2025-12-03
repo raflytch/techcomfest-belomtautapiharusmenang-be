@@ -159,4 +159,12 @@ export class AppConfigService {
   get googleGenAiApiKey(): string {
     return this.get<string>('GOOGLE_GENAI_API_KEY', '');
   }
+
+  /**
+   * Get SHA Webhook Secret Key
+   * @returns {string} SHA_WEBHOOK_SECRET environment variable
+   */
+  get shaWebhookSecret(): string {
+    return this.get<string>('SHA_WEBHOOK_SECRET', '');
+  }
 }

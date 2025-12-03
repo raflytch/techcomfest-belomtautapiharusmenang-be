@@ -11,16 +11,16 @@ Platform aksi hijau berbasis AI untuk mendorong partisipasi warga dalam pengelol
 - 🎯 **Gamification** - Sistem poin, badge, dan leaderboard
 - 🎁 **Reward System** - Penukaran poin ke voucher UMKM hijau
 - 📊 **Dashboard & Reporting** - Statistik aksi hijau per kelurahan/RT/RW
+- 🔗 **Webhook Integration** - Daily reward distribution via external scheduler
 
 ## 👥 Segmen Pengguna
 
-| Role                | Fitur Utama                                                     |
-| ------------------- | --------------------------------------------------------------- |
-| **Warga**           | Upload aksi hijau, kumpulkan poin, tukar reward, ikut challenge |
-| **UMKM Hijau**      | Buat campaign voucher, lihat statistik penukaran                |
-| **Bank Sampah**     | Validasi setoran, dashboard tonase sampah                       |
-| **Admin Kelurahan** | Dashboard agregat, export laporan SDGs                          |
-| **Super Admin**     | Manage user, konfigurasi AI & poin                              |
+| Role           | Fitur Utama                                                     |
+| -------------- | --------------------------------------------------------------- |
+| **Warga**      | Upload aksi hijau, kumpulkan poin, tukar reward, ikut challenge |
+| **UMKM Hijau** | Buat campaign voucher, lihat statistik penukaran                |
+| **DLH**        | Dashboard agregat, export laporan SDGs                          |
+| **Admin**      | Manage user, konfigurasi AI & poin                              |
 
 ## 🌿 Kategori Aksi Hijau (AI Detection)
 
@@ -38,6 +38,49 @@ Platform aksi hijau berbasis AI untuk mendorong partisipasi warga dalam pengelol
 2. AI menganalisis & memberikan skor (0-100)
 3. Backend konversi skor → poin
 4. Poin dikumpulkan untuk reward UMKM
+```
+
+## 🏆 Daily Reward System
+
+Top 3 pengguna dengan poin tertinggi mendapatkan bonus harian:
+
+| Peringkat | Bonus Poin |
+| --------- | ---------- |
+| 🥇 #1     | +15 poin   |
+| 🥈 #2     | +10 poin   |
+| 🥉 #3     | +5 poin    |
+
+### Webhook Endpoint
+
+Daily reward didistribusikan melalui webhook yang dapat dipanggil oleh external scheduler (cron job, GitHub Actions, dll):
+
+```bash
+POST /leaderboard/distribute-reward
+Headers:
+  x-sha-key: <SHA_WEBHOOK_SECRET>
+```
+
+**Response:**
+
+```json
+{
+  "statusCode": 200,
+  "message": "Daily reward distributed successfully",
+  "data": {
+    "date": "2025-12-03",
+    "timestamp": "2025-12-03T16:59:00.000Z",
+    "winners": [
+      {
+        "userId": "...",
+        "name": "User Name",
+        "rank": 1,
+        "bonusPoints": 15,
+        "newTotalPoints": 150
+      }
+    ],
+    "totalBonusDistributed": 30
+  }
+}
 ```
 
 ## ⚙️ Environment Variables
@@ -89,6 +132,12 @@ CLOUDINARY_API_SECRET=your_cloudinary_api_secret
 # ===========================================
 EMAIL_USER=your_email@gmail.com
 EMAIL_APP_PASSWORD=your_16_digit_app_password
+
+# ===========================================
+# WEBHOOK AUTHENTICATION
+# ===========================================
+# Secret key for webhook endpoints (daily reward distribution)
+SHA_WEBHOOK_SECRET=your_sha_webhook_secret
 ```
 
 ### 📧 Setup Gmail App Password
@@ -104,6 +153,11 @@ EMAIL_APP_PASSWORD=your_16_digit_app_password
 2. Buat API Key baru
 3. Copy ke `GOOGLE_GENAI_API_KEY`
 
+### 🔐 Setup Webhook Secret
+
+1. Generate random string yang aman untuk `SHA_WEBHOOK_SECRET`
+2. Gunakan secret yang sama di external scheduler untuk header `x-sha-key`
+
 ## 🚀 Instalasi
 
 ```bash
@@ -116,12 +170,32 @@ $ npx prisma generate
 # Run migrations
 $ npx prisma migrate dev
 
+# Seed database (DLH & Admin accounts)
+$ pnpm db:seed
+
 # Development mode
 $ pnpm run start:dev
 
 # Production mode
 $ pnpm run start:prod
 ```
+
+## 🌱 Database Seeding
+
+Seed database dengan akun DLH dan Admin default:
+
+```bash
+$ pnpm db:seed
+```
+
+**Default Accounts:**
+
+| Role  | Email            | Password    |
+| ----- | ---------------- | ----------- |
+| ADMIN | admin@sirkula.id | Admin123456 |
+| DLH   | dlh@sirkula.id   | Dlh123456   |
+
+⚠️ **Ganti password default di production!**
 
 ## 🧪 Testing
 
@@ -141,18 +215,28 @@ $ pnpm run test:cov
 ```
 src/
 ├── commons/          # Decorators, Guards, Interceptors
+│   ├── decorators/       # Custom decorators
+│   ├── guards/           # Auth guards (JWT, Webhook, Roles)
+│   ├── helpers/          # Helper functions
+│   ├── interceptors/     # Response interceptors
+│   └── strategies/       # Passport strategies
 ├── config/           # Configuration module
 ├── database/         # Prisma database service
 ├── domains/          # Business domains
 │   ├── green-waste-ai/   # AI verification service
-│   ├── leaderboard/      # Leaderboard & ranking
-│   ├── user/             # User management
+│   ├── leaderboard/      # Leaderboard, ranking & daily reward webhook
+│   ├── user/             # User management & auth
 │   └── voucher/          # Voucher & rewards
 └── libs/             # External integrations
     ├── cloudinary/       # Media upload
     ├── google-genai/     # AI verification
     ├── mailer/           # Email service
-    └── scheduler/        # Cron jobs
+    └── scheduler/        # (Deprecated) Cron jobs
+
+prisma/
+├── schema.prisma     # Database schema
+├── seed.ts           # Database seeder
+└── migrations/       # Migration files
 ```
 
 ## 🛠️ Tech Stack

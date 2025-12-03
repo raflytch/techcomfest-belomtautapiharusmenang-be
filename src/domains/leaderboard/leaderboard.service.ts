@@ -3,18 +3,36 @@
  * @description Business logic for leaderboard operations (ALL_TIME based on user.total_points)
  */
 
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { LeaderboardRepository } from './leaderboard.repository';
+import { MailerService } from '../../libs/mailer/mailer.service';
 import { QueryLeaderboardDto } from './dto';
 import { ILeaderboardEntry, IUserRankResponse } from './interfaces';
+import {
+  IDailyRewardResult,
+  IDailyRewardWinner,
+  ITopUserData,
+} from '../../libs/scheduler/interfaces/scheduler.interface';
+import {
+  DAILY_BONUS_POINTS,
+  TOP_USERS_COUNT,
+} from '../../libs/scheduler/constants/scheduler.constant';
 
 /**
  * Leaderboard service
- * @description Handles leaderboard logic (scheduler handles rewards automatically)
+ * @description Handles leaderboard logic and daily reward distribution via webhook
  */
 @Injectable()
 export class LeaderboardService {
-  constructor(private readonly leaderboardRepository: LeaderboardRepository) {}
+  /**
+   * Logger instance
+   */
+  private readonly logger = new Logger(LeaderboardService.name);
+
+  constructor(
+    private readonly leaderboardRepository: LeaderboardRepository,
+    private readonly mailerService: MailerService,
+  ) {}
 
   /**
    * Get leaderboard with pagination (ALL_TIME)
@@ -45,5 +63,111 @@ export class LeaderboardService {
    */
   async getTopThree() {
     return this.leaderboardRepository.getTopUsers(3);
+  }
+
+  /**
+   * Distribute daily reward to top 3 users (called via webhook)
+   * @returns {Promise<IDailyRewardResult | null>} Reward result
+   */
+  async distributeDailyReward(): Promise<IDailyRewardResult | null> {
+    this.logger.log('🏆 Starting daily leaderboard reward distribution...');
+
+    try {
+      const topUsers =
+        await this.leaderboardRepository.getTopUsers(TOP_USERS_COUNT);
+
+      if (topUsers.length === 0) {
+        this.logger.log('No users with points. Skipping reward distribution.');
+        return null;
+      }
+
+      const winners: IDailyRewardWinner[] = [];
+      let totalBonusDistributed = 0;
+
+      /**
+       * Process each top user
+       */
+      for (let i = 0; i < topUsers.length; i++) {
+        const user = topUsers[i] as ITopUserData;
+        const rank = (i + 1) as 1 | 2 | 3;
+        const bonusPoints = DAILY_BONUS_POINTS[rank];
+
+        /**
+         * Add bonus points to user
+         */
+        const updatedUser = await this.leaderboardRepository.addBonusPoints(
+          user.id,
+          bonusPoints,
+        );
+
+        const winner: IDailyRewardWinner = {
+          userId: user.id,
+          email: user.email,
+          name: user.name,
+          rank,
+          totalPoints: user.totalPoints,
+          bonusPoints,
+          newTotalPoints: updatedUser.total_points,
+        };
+
+        winners.push(winner);
+        totalBonusDistributed += bonusPoints;
+
+        /**
+         * Send email notification to winner (fire and forget)
+         */
+        this.sendRewardEmail(user, rank, bonusPoints, updatedUser.total_points);
+
+        this.logger.log(
+          `🥇 Rank ${rank}: ${user.name} received ${bonusPoints} bonus points`,
+        );
+      }
+
+      const now = new Date();
+      const result: IDailyRewardResult = {
+        date: now.toISOString().split('T')[0],
+        timestamp: now.toISOString(),
+        winners,
+        totalBonusDistributed,
+      };
+
+      this.logger.log(
+        `✅ Daily reward completed. Total bonus: ${totalBonusDistributed} points to ${winners.length} winners`,
+      );
+
+      return result;
+    } catch (error) {
+      this.logger.error(`Daily reward distribution failed: ${error.message}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Send reward email to winner (fire and forget)
+   * @param {ITopUserData} user - User data
+   * @param {1 | 2 | 3} rank - User rank
+   * @param {number} bonusPoints - Bonus points awarded
+   * @param {number} newTotalPoints - New total points
+   */
+  private sendRewardEmail(
+    user: ITopUserData,
+    rank: 1 | 2 | 3,
+    bonusPoints: number,
+    newTotalPoints: number,
+  ): void {
+    this.mailerService
+      .sendLeaderboardRewardEmail(user.email, {
+        userName: user.name,
+        rank,
+        todayPoints: user.totalPoints,
+        bonusPoints,
+        newTotalPoints,
+        date: new Date(),
+      })
+      .catch((err) =>
+        this.logger.error(
+          `Failed to send reward email to ${user.email}: ${err.message}`,
+        ),
+      );
   }
 }
