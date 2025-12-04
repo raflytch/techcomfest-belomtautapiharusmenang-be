@@ -114,9 +114,14 @@ export class LeaderboardService {
         totalBonusDistributed += bonusPoints;
 
         /**
-         * Send email notification to winner (fire and forget)
+         * Send email notification to winner (awaited for serverless)
          */
-        this.sendRewardEmail(user, rank, bonusPoints, updatedUser.total_points);
+        await this.sendRewardEmail(
+          user,
+          rank,
+          bonusPoints,
+          updatedUser.total_points,
+        );
 
         this.logger.log(
           `🥇 Rank ${rank}: ${user.name} received ${bonusPoints} bonus points`,
@@ -143,31 +148,32 @@ export class LeaderboardService {
   }
 
   /**
-   * Send reward email to winner (fire and forget)
+   * Send reward email to winner (awaited for serverless compatibility)
    * @param {ITopUserData} user - User data
    * @param {1 | 2 | 3} rank - User rank
    * @param {number} bonusPoints - Bonus points awarded
    * @param {number} newTotalPoints - New total points
    */
-  private sendRewardEmail(
+  private async sendRewardEmail(
     user: ITopUserData,
     rank: 1 | 2 | 3,
     bonusPoints: number,
     newTotalPoints: number,
-  ): void {
-    this.mailerService
-      .sendLeaderboardRewardEmail(user.email, {
+  ): Promise<void> {
+    try {
+      await this.mailerService.sendLeaderboardRewardEmail(user.email, {
         userName: user.name,
         rank,
         todayPoints: user.totalPoints,
         bonusPoints,
         newTotalPoints,
         date: new Date(),
-      })
-      .catch((err) =>
-        this.logger.error(
-          `Failed to send reward email to ${user.email}: ${err.message}`,
-        ),
+      });
+      this.logger.log(`Reward email sent to ${user.email} for rank ${rank}`);
+    } catch (err) {
+      this.logger.error(
+        `Failed to send reward email to ${user.email}: ${err.message}`,
       );
+    }
   }
 }

@@ -7,6 +7,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { VoucherRepository } from './voucher.repository';
@@ -28,6 +29,11 @@ import { randomBytes } from 'crypto';
  */
 @Injectable()
 export class VoucherService {
+  /**
+   * Logger instance for voucher service
+   */
+  private readonly logger = new Logger(VoucherService.name);
+
   constructor(
     private readonly voucherRepository: VoucherRepository,
     private readonly cloudinaryService: CloudinaryService,
@@ -274,11 +280,11 @@ export class VoucherService {
 
     /**
      * Send voucher redemption email to user
-     * Fire and forget - don't block the response
+     * Awaited with try-catch for serverless compatibility (Vercel)
      */
     if (user.email) {
-      this.mailerService
-        .sendVoucherRedemptionEmail(user.email, {
+      try {
+        await this.mailerService.sendVoucherRedemptionEmail(user.email, {
           userName: user.name,
           voucherName: voucher.name,
           redemptionCode: this.generateRedemptionCode(claim.id),
@@ -292,8 +298,13 @@ export class VoucherService {
           umkmName:
             voucher.umkm?.umkm_name || voucher.umkm?.name || 'UMKM Partner',
           validUntil: voucher.valid_until,
-        })
-        .catch((err) => console.error('Failed to send redemption email:', err));
+        });
+        this.logger.log(`Redemption email sent to ${user.email}`);
+      } catch (err) {
+        this.logger.error(
+          `Failed to send redemption email to ${user.email}: ${err.message}`,
+        );
+      }
     }
 
     return {
@@ -413,31 +424,39 @@ export class VoucherService {
 
     /**
      * Send notification email to UMKM
-     * Fire and forget - don't block the response
+     * Awaited with try-catch for serverless compatibility (Vercel)
      */
     if (updated.voucher.umkm?.email) {
-      this.mailerService
-        .sendVoucherUsedNotificationEmail(updated.voucher.umkm.email, {
-          umkmName:
-            updated.voucher.umkm?.umkm_name ||
-            updated.voucher.umkm?.name ||
-            'UMKM Partner',
-          voucherName: updated.voucher.name,
-          userName: claim.user.name,
-          userEmail: claim.user.email,
-          redemptionCode: this.generateRedemptionCode(claimId),
-          discountType: updated.voucher.discount_percentage
-            ? 'PERCENTAGE'
-            : 'FIXED_AMOUNT',
-          discountValue:
-            updated.voucher.discount_percentage ||
-            updated.voucher.discount_amount ||
-            0,
-          usedAt: new Date(),
-        })
-        .catch((err) =>
-          console.error('Failed to send UMKM notification email:', err),
+      try {
+        await this.mailerService.sendVoucherUsedNotificationEmail(
+          updated.voucher.umkm.email,
+          {
+            umkmName:
+              updated.voucher.umkm?.umkm_name ||
+              updated.voucher.umkm?.name ||
+              'UMKM Partner',
+            voucherName: updated.voucher.name,
+            userName: claim.user.name,
+            userEmail: claim.user.email,
+            redemptionCode: this.generateRedemptionCode(claimId),
+            discountType: updated.voucher.discount_percentage
+              ? 'PERCENTAGE'
+              : 'FIXED_AMOUNT',
+            discountValue:
+              updated.voucher.discount_percentage ||
+              updated.voucher.discount_amount ||
+              0,
+            usedAt: new Date(),
+          },
         );
+        this.logger.log(
+          `UMKM notification email sent to ${updated.voucher.umkm.email}`,
+        );
+      } catch (err) {
+        this.logger.error(
+          `Failed to send UMKM notification email to ${updated.voucher.umkm.email}: ${err.message}`,
+        );
+      }
     }
 
     return this.mapClaimResponse(updated);
