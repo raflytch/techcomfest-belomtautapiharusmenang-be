@@ -276,23 +276,25 @@ export class VoucherService {
      * Send voucher redemption email to user
      * Fire and forget - don't block the response
      */
-    this.mailerService
-      .sendVoucherRedemptionEmail(user.email, {
-        userName: user.name,
-        voucherName: voucher.name,
-        redemptionCode: this.generateRedemptionCode(claim.id),
-        pointsUsed: voucher.points_required,
-        remainingPoints,
-        discountType: voucher.discount_percentage
-          ? 'PERCENTAGE'
-          : 'FIXED_AMOUNT',
-        discountValue:
-          voucher.discount_percentage || voucher.discount_amount || 0,
-        umkmName:
-          voucher.umkm?.umkm_name || voucher.umkm?.name || 'UMKM Partner',
-        validUntil: voucher.valid_until,
-      })
-      .catch((err) => console.error('Failed to send redemption email:', err));
+    if (user.email) {
+      this.mailerService
+        .sendVoucherRedemptionEmail(user.email, {
+          userName: user.name,
+          voucherName: voucher.name,
+          redemptionCode: this.generateRedemptionCode(claim.id),
+          pointsUsed: voucher.points_required,
+          remainingPoints,
+          discountType: voucher.discount_percentage
+            ? 'PERCENTAGE'
+            : 'FIXED_AMOUNT',
+          discountValue:
+            voucher.discount_percentage || voucher.discount_amount || 0,
+          umkmName:
+            voucher.umkm?.umkm_name || voucher.umkm?.name || 'UMKM Partner',
+          validUntil: voucher.valid_until,
+        })
+        .catch((err) => console.error('Failed to send redemption email:', err));
+    }
 
     return {
       ...this.mapClaimResponse(claim),
