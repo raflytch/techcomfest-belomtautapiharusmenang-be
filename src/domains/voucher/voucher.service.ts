@@ -260,14 +260,6 @@ export class VoucherService {
       throw new BadRequestException('Voucher quota exhausted');
     }
 
-    const alreadyClaimed = await this.voucherRepository.hasUserClaimed(
-      userId,
-      voucherId,
-    );
-    if (alreadyClaimed) {
-      throw new BadRequestException('You have already claimed this voucher');
-    }
-
     const userPoints = await this.voucherRepository.getUserPoints(userId);
     if (userPoints < voucher.points_required) {
       throw new BadRequestException(
