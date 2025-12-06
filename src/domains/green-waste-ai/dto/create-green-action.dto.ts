@@ -28,12 +28,12 @@ import {
 export class CreateGreenActionDto {
   /**
    * Main category of the green action
-   * @example "GREEN_WASTE"
+   * @example "PILAH_SAMPAH"
    */
   @ApiProperty({
-    description: 'Main category of the green action',
+    description: 'Kategori utama aksi hijau',
     enum: GreenActionCategory,
-    example: GreenActionCategory.GREEN_WASTE,
+    example: GreenActionCategory.PILAH_SAMPAH,
   })
   @IsNotEmpty({ message: 'Category is required' })
   @IsEnum(GreenActionCategory, { message: 'Invalid green action category' })
@@ -41,11 +41,11 @@ export class CreateGreenActionDto {
 
   /**
    * Sub-category of the green action
-   * @example "ORGANIC_WASTE"
+   * @example "SAMPAH_ORGANIK"
    */
   @ApiProperty({
-    description: 'Sub-category of the green action',
-    example: 'ORGANIC_WASTE',
+    description: 'Sub-kategori aksi hijau',
+    example: 'SAMPAH_ORGANIK',
   })
   @IsNotEmpty({ message: 'Sub-category is required' })
   @IsString({ message: 'Sub-category must be a string' })
@@ -133,21 +133,21 @@ export class CreateGreenActionDto {
 }
 
 /**
- * DTO for Green Waste action creation
- * @description Specific DTO for Green Waste category
+ * DTO for Pilah Sampah action creation
+ * @description Specific DTO for Pilah Sampah category
  */
 export class CreateGreenWasteActionDto extends CreateGreenActionDto {
   /**
-   * Sub-category for Green Waste
+   * Sub-category for Pilah Sampah
    */
   @ApiProperty({
-    description: 'Sub-category for Green Waste',
+    description: 'Sub-kategori Pilah Sampah',
     enum: GreenWasteSubCategory,
-    example: GreenWasteSubCategory.ORGANIC_WASTE,
+    example: GreenWasteSubCategory.SAMPAH_ORGANIK,
   })
   @IsNotEmpty({ message: 'Sub-category is required' })
   @IsEnum(GreenWasteSubCategory, {
-    message: 'Invalid Green Waste sub-category',
+    message: 'Invalid Pilah Sampah sub-category',
   })
   declare subCategory: GreenWasteSubCategory;
 }
@@ -163,7 +163,7 @@ export class CreateGreenHomeActionDto extends CreateGreenActionDto {
   @ApiProperty({
     description: 'Sub-category for Green Home',
     enum: GreenHomeSubCategory,
-    example: GreenHomeSubCategory.PLANT_TREE,
+    example: GreenHomeSubCategory.TANAM_POHON_BARU,
   })
   @IsNotEmpty({ message: 'Sub-category is required' })
   @IsEnum(GreenHomeSubCategory, { message: 'Invalid Green Home sub-category' })
@@ -171,41 +171,41 @@ export class CreateGreenHomeActionDto extends CreateGreenActionDto {
 }
 
 /**
- * DTO for Green Consumption action creation
- * @description Specific DTO for Green Consumption category
+ * DTO for Konsumsi Hijau action creation
+ * @description Specific DTO for Konsumsi Hijau category
  */
 export class CreateGreenConsumptionActionDto extends CreateGreenActionDto {
   /**
-   * Sub-category for Green Consumption
+   * Sub-category for Konsumsi Hijau
    */
   @ApiProperty({
-    description: 'Sub-category for Green Consumption',
+    description: 'Sub-kategori Konsumsi Hijau',
     enum: GreenConsumptionSubCategory,
-    example: GreenConsumptionSubCategory.ORGANIC_PRODUCT,
+    example: GreenConsumptionSubCategory.PRODUK_ORGANIK,
   })
   @IsNotEmpty({ message: 'Sub-category is required' })
   @IsEnum(GreenConsumptionSubCategory, {
-    message: 'Invalid Green Consumption sub-category',
+    message: 'Invalid Konsumsi Hijau sub-category',
   })
   declare subCategory: GreenConsumptionSubCategory;
 }
 
 /**
- * DTO for Green Community action creation
- * @description Specific DTO for Green Community category
+ * DTO for Aksi Kolektif action creation
+ * @description Specific DTO for Aksi Kolektif category
  */
 export class CreateGreenCommunityActionDto extends CreateGreenActionDto {
   /**
-   * Sub-category for Green Community
+   * Sub-category for Aksi Kolektif
    */
   @ApiProperty({
-    description: 'Sub-category for Green Community',
+    description: 'Sub-kategori Aksi Kolektif',
     enum: GreenCommunitySubCategory,
-    example: GreenCommunitySubCategory.COMMUNITY_CLEANUP,
+    example: GreenCommunitySubCategory.KERJA_BAKTI,
   })
   @IsNotEmpty({ message: 'Sub-category is required' })
   @IsEnum(GreenCommunitySubCategory, {
-    message: 'Invalid Green Community sub-category',
+    message: 'Invalid Aksi Kolektif sub-category',
   })
   declare subCategory: GreenCommunitySubCategory;
 }

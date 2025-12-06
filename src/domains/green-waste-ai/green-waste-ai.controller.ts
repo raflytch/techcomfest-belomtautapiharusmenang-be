@@ -67,107 +67,111 @@ export class GreenWasteAiController {
   })
   async getCategoriesInfo() {
     const categories = {
-      GREEN_WASTE: {
-        name: 'Green Waste - Pilah & Olah Sampah',
-        description: 'Sorting and processing waste properly',
+      PILAH_SAMPAH: {
+        name: 'Pilah & Olah Sampah',
+        description: 'Memilah dan mengolah sampah dengan benar',
         subCategories: [
           {
-            id: 'ORGANIC_WASTE',
+            id: 'SAMPAH_ORGANIK',
             name: 'Pilah Sampah Organik',
-            description: 'Sorting organic/biodegradable waste',
-            criteria: 'Minimum 2 types of waste detected, proper bins visible',
+            description: 'Memilah sampah organik/biodegradable',
+            criteria:
+              'Minimal 2 jenis sampah terdeteksi, tempat sampah terlihat',
             basePoints: 50,
           },
           {
-            id: 'INORGANIC_RECYCLE',
+            id: 'SAMPAH_ANORGANIK',
             name: 'Pilah Sampah Anorganik Daur Ulang',
             description:
-              'Sorting recyclable inorganic waste (plastic, paper, metal)',
-            criteria: 'Minimum 2 types of recyclables, separate containers',
+              'Memilah sampah anorganik yang dapat didaur ulang (plastik, kertas, logam)',
+            criteria: 'Minimal 2 jenis sampah anorganik, wadah terpisah',
             basePoints: 50,
           },
           {
-            id: 'HAZARDOUS_WASTE',
+            id: 'SAMPAH_B3',
             name: 'Penanganan Sampah Berbahaya (B3)',
             description:
-              'Handling hazardous waste (batteries, lamps, expired medicine)',
-            criteria: 'Hazardous items detected, special container visible',
+              'Menangani sampah berbahaya (baterai, lampu, obat kedaluwarsa)',
+            criteria: 'Barang berbahaya terdeteksi, wadah khusus terlihat',
             basePoints: 70,
           },
         ],
       },
-      GREEN_HOME: {
-        name: 'Green Home - Tanam Pohon & Area Hijau',
-        description: 'Planting trees and creating green areas at home',
+      TANAM_POHON: {
+        name: 'Tanam Pohon & Area Hijau',
+        description: 'Menanam pohon dan membuat area hijau di rumah',
         subCategories: [
           {
-            id: 'PLANT_TREE',
+            id: 'TANAM_POHON_BARU',
             name: 'Tanam Pohon/Tanaman Baru',
-            description: 'Planting new trees or plants',
-            criteria: 'Planting activity visible, plants/seedlings detected',
+            description: 'Menanam pohon atau tanaman baru',
+            criteria: 'Aktivitas menanam terlihat, tanaman/bibit terdeteksi',
             basePoints: 60,
-            bonus: 'Before-after comparison: +20 points',
+            bonus: 'Perbandingan sebelum-sesudah: +20 poin',
           },
           {
             id: 'URBAN_FARMING',
             name: 'Urban Farming',
-            description: 'Growing vegetables in pots or small hydroponics',
-            criteria: 'Urban garden/hydroponics setup visible',
+            description: 'Menanam sayuran dalam pot atau hidroponik kecil',
+            criteria: 'Kebun urban/setup hidroponik terlihat',
             basePoints: 50,
           },
           {
             id: 'GREEN_CORNER',
             name: 'Mini Green Corner',
-            description: 'Creating a mini green corner at home',
-            criteria: 'Dedicated green space with multiple plants',
+            description: 'Membuat sudut hijau mini di rumah',
+            criteria: 'Ruang khusus hijau dengan beberapa tanaman',
             basePoints: 40,
           },
         ],
       },
-      GREEN_CONSUMPTION: {
-        name: 'Green Consumption - Produk Organik/Ramah Lingkungan',
-        description: 'Using organic or eco-friendly products',
+      KONSUMSI_HIJAU: {
+        name: 'Produk Organik/Ramah Lingkungan',
+        description: 'Menggunakan produk organik atau ramah lingkungan',
         subCategories: [
           {
-            id: 'ORGANIC_PRODUCT',
+            id: 'PRODUK_ORGANIK',
             name: 'Produk Organik',
-            description: 'Buying organic products (soap, skincare, food)',
-            criteria: 'Organic products visible, eco-friendly packaging',
+            description: 'Membeli produk organik (sabun, skincare, makanan)',
+            criteria: 'Produk organik terlihat, kemasan ramah lingkungan',
             basePoints: 30,
-            bonus: 'UMKM product detected: +10 points',
+            bonus: 'Produk UMKM terdeteksi: +10 poin',
           },
           {
             id: 'REFILL_STATION',
             name: 'Refill Station/Bulk Store',
-            description: 'Shopping at refill stations or bulk stores',
-            criteria: 'Refill station/bulk store visible, no-plastic packaging',
+            description: 'Belanja di refill station atau toko curah',
+            criteria:
+              'Refill station/toko curah terlihat, tanpa kemasan plastik',
             basePoints: 35,
           },
           {
-            id: 'REUSABLE_ITEMS',
+            id: 'BARANG_REUSABLE',
             name: 'Pakai Barang Reusable',
-            description: 'Using reusable bags, tumblers, containers',
-            criteria: 'Reusable items visible (bags, tumbler, containers)',
+            description:
+              'Menggunakan tas belanja, tumbler, wadah yang dapat digunakan ulang',
+            criteria: 'Barang reusable terlihat (tas, tumbler, wadah)',
             basePoints: 25,
           },
         ],
       },
-      GREEN_COMMUNITY: {
-        name: 'Green Community - Aksi Kolektif',
-        description: 'Collective environmental actions',
+      AKSI_KOLEKTIF: {
+        name: 'Aksi Kolektif',
+        description: 'Aksi bersama untuk lingkungan',
         subCategories: [
           {
-            id: 'COMMUNITY_CLEANUP',
+            id: 'KERJA_BAKTI',
             name: 'Kerja Bakti',
-            description: 'Community cleanup activities',
-            criteria: 'Group cleanup activity, collected trash visible',
+            description: 'Aktivitas kerja bakti komunitas',
+            criteria:
+              'Aktivitas kerja bakti kelompok, sampah terkumpul terlihat',
             basePoints: 80,
           },
           {
-            id: 'RIVER_CLEANUP',
+            id: 'BERSIH_SUNGAI',
             name: 'Bersih Sungai',
-            description: 'River or water body cleaning',
-            criteria: 'River cleaning activity, collected debris',
+            description: 'Pembersihan sungai atau badan air',
+            criteria: 'Aktivitas bersih sungai, sampah terkumpul',
             basePoints: 90,
           },
         ],
@@ -208,18 +212,18 @@ export class GreenWasteAiController {
         category: {
           type: 'string',
           enum: [
-            'GREEN_WASTE',
-            'GREEN_HOME',
-            'GREEN_CONSUMPTION',
-            'GREEN_COMMUNITY',
+            'PILAH_SAMPAH',
+            'TANAM_POHON',
+            'KONSUMSI_HIJAU',
+            'AKSI_KOLEKTIF',
           ],
-          description: 'Main category of the green action',
-          example: 'GREEN_COMMUNITY',
+          description: 'Kategori utama aksi hijau',
+          example: 'AKSI_KOLEKTIF',
         },
         subCategory: {
           type: 'string',
-          description: 'Sub-category of the green action',
-          example: 'COMMUNITY_CLEANUP',
+          description: 'Sub-kategori aksi hijau',
+          example: 'KERJA_BAKTI',
         },
         description: {
           type: 'string',
@@ -278,7 +282,7 @@ export class GreenWasteAiController {
           properties: {
             id: { type: 'string', example: 'uuid-here' },
             userId: { type: 'string', example: 'user-uuid' },
-            category: { type: 'string', example: 'GREEN_COMMUNITY' },
+            category: { type: 'string', example: 'AKSI_KOLEKTIF' },
             description: {
               type: 'string',
               example: 'Membersihkan sampah di taman',

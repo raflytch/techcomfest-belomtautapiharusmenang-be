@@ -40,24 +40,24 @@ export class GreenWasteAiService {
    * Points criteria based on AI score for each category
    */
   private readonly POINTS_CRITERIA = {
-    [GreenActionCategory.GREEN_WASTE]: {
-      ORGANIC_WASTE: { basePoints: 50, minScore: 60 },
-      INORGANIC_RECYCLE: { basePoints: 50, minScore: 60 },
-      HAZARDOUS_WASTE: { basePoints: 70, minScore: 75 },
+    [GreenActionCategory.PILAH_SAMPAH]: {
+      SAMPAH_ORGANIK: { basePoints: 50, minScore: 60 },
+      SAMPAH_ANORGANIK: { basePoints: 50, minScore: 60 },
+      SAMPAH_B3: { basePoints: 70, minScore: 75 },
     },
-    [GreenActionCategory.GREEN_HOME]: {
-      PLANT_TREE: { basePoints: 60, minScore: 70 },
+    [GreenActionCategory.TANAM_POHON]: {
+      TANAM_POHON_BARU: { basePoints: 60, minScore: 70 },
       URBAN_FARMING: { basePoints: 50, minScore: 65 },
       GREEN_CORNER: { basePoints: 40, minScore: 60 },
     },
-    [GreenActionCategory.GREEN_CONSUMPTION]: {
-      ORGANIC_PRODUCT: { basePoints: 30, minScore: 60 },
+    [GreenActionCategory.KONSUMSI_HIJAU]: {
+      PRODUK_ORGANIK: { basePoints: 30, minScore: 60 },
       REFILL_STATION: { basePoints: 35, minScore: 60 },
-      REUSABLE_ITEMS: { basePoints: 25, minScore: 55 },
+      BARANG_REUSABLE: { basePoints: 25, minScore: 55 },
     },
-    [GreenActionCategory.GREEN_COMMUNITY]: {
-      COMMUNITY_CLEANUP: { basePoints: 80, minScore: 70 },
-      RIVER_CLEANUP: { basePoints: 90, minScore: 70 },
+    [GreenActionCategory.AKSI_KOLEKTIF]: {
+      KERJA_BAKTI: { basePoints: 80, minScore: 70 },
+      BERSIH_SUNGAI: { basePoints: 90, minScore: 70 },
     },
   };
 
@@ -65,13 +65,13 @@ export class GreenWasteAiService {
    * AI prompt templates for each category
    */
   private readonly AI_PROMPTS = {
-    [GreenActionCategory.GREEN_WASTE]: `You are an AI assistant that verifies green actions for waste sorting.
+    [GreenActionCategory.PILAH_SAMPAH]: `You are an AI assistant that verifies green actions for waste sorting.
 Analyze this image/video and determine if it shows proper waste sorting activity.
 
-VERIFICATION CRITERIA FOR GREEN WASTE:
-1. For ORGANIC_WASTE: Look for food waste, plant materials, biodegradable items being sorted into a designated container
-2. For INORGANIC_RECYCLE: Look for plastic, paper, metal, glass being sorted into separate recycling containers
-3. For HAZARDOUS_WASTE: Look for batteries, lamps, paint cans, expired medicine being placed in a special hazardous waste container
+VERIFICATION CRITERIA FOR PILAH SAMPAH:
+1. For SAMPAH_ORGANIK: Look for food waste, plant materials, biodegradable items being sorted into a designated container
+2. For SAMPAH_ANORGANIK: Look for plastic, paper, metal, glass being sorted into separate recycling containers
+3. For SAMPAH_B3: Look for batteries, lamps, paint cans, expired medicine being placed in a special hazardous waste container
 
 IMPORTANT CHECKS:
 - Multiple waste bins/containers visible (minimum 2 for organic/inorganic, special container for hazardous)
@@ -92,11 +92,11 @@ Respond in this exact JSON format:
   }
 }`,
 
-    [GreenActionCategory.GREEN_HOME]: `You are an AI assistant that verifies green actions for planting and green areas.
+    [GreenActionCategory.TANAM_POHON]: `You are an AI assistant that verifies green actions for planting and green areas.
 Analyze this image/video and determine if it shows green home activities.
 
-VERIFICATION CRITERIA FOR GREEN HOME:
-1. For PLANT_TREE: Look for tree/plant planting activity, soil digging, seedlings, watering
+VERIFICATION CRITERIA FOR TANAM POHON:
+1. For TANAM_POHON_BARU: Look for tree/plant planting activity, soil digging, seedlings, watering
 2. For URBAN_FARMING: Look for vegetable plants in pots, hydroponics setup, urban garden
 3. For GREEN_CORNER: Look for a dedicated green space with multiple plants at home
 
@@ -120,13 +120,13 @@ Respond in this exact JSON format:
   }
 }`,
 
-    [GreenActionCategory.GREEN_CONSUMPTION]: `You are an AI assistant that verifies green consumption actions.
+    [GreenActionCategory.KONSUMSI_HIJAU]: `You are an AI assistant that verifies green consumption actions.
 Analyze this image/video and determine if it shows eco-friendly consumption behavior.
 
-VERIFICATION CRITERIA FOR GREEN CONSUMPTION:
-1. For ORGANIC_PRODUCT: Look for organic products, eco-friendly packaging, UMKM products
+VERIFICATION CRITERIA FOR KONSUMSI HIJAU:
+1. For PRODUK_ORGANIK: Look for organic products, eco-friendly packaging, UMKM products
 2. For REFILL_STATION: Look for refill station shopping, bulk store items, no-plastic packaging
-3. For REUSABLE_ITEMS: Look for reusable bags, tumblers, containers being used
+3. For BARANG_REUSABLE: Look for reusable bags, tumblers, containers being used
 
 IMPORTANT CHECKS:
 - Visible organic/eco-friendly products or packaging
@@ -148,12 +148,12 @@ Respond in this exact JSON format:
   }
 }`,
 
-    [GreenActionCategory.GREEN_COMMUNITY]: `You are an AI assistant that verifies community green actions.
+    [GreenActionCategory.AKSI_KOLEKTIF]: `You are an AI assistant that verifies community green actions.
 Analyze this image/video and determine if it shows collective green activities.
 
-VERIFICATION CRITERIA FOR GREEN COMMUNITY:
-1. For COMMUNITY_CLEANUP: Look for group cleanup activities, collected trash, cleaning tools
-2. For RIVER_CLEANUP: Look for river/water body cleaning, collected debris
+VERIFICATION CRITERIA FOR AKSI KOLEKTIF:
+1. For KERJA_BAKTI: Look for group cleanup activities, collected trash, cleaning tools
+2. For BERSIH_SUNGAI: Look for river/water body cleaning, collected debris
 
 IMPORTANT CHECKS:
 - Multiple people participating (if visible)

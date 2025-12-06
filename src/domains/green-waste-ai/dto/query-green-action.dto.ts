@@ -18,12 +18,12 @@ import {
 export class QueryGreenActionDto extends PaginationDto {
   /**
    * Filter by category
-   * @example "GREEN_WASTE"
+   * @example "PILAH_SAMPAH"
    */
   @ApiPropertyOptional({
-    description: 'Filter by green action category',
+    description: 'Filter berdasarkan kategori aksi hijau',
     enum: GreenActionCategory,
-    example: GreenActionCategory.GREEN_WASTE,
+    example: GreenActionCategory.PILAH_SAMPAH,
   })
   @IsOptional()
   @IsEnum(GreenActionCategory, { message: 'Invalid category' })

@@ -9,103 +9,103 @@
  */
 export enum GreenActionCategory {
   /**
-   * Green Waste - Sorting and processing waste
+   * Pilah & Olah Sampah
    */
-  GREEN_WASTE = 'GREEN_WASTE',
+  PILAH_SAMPAH = 'PILAH_SAMPAH',
 
   /**
-   * Green Home - Planting trees and green areas
+   * Tanam Pohon & Area Hijau
    */
-  GREEN_HOME = 'GREEN_HOME',
+  TANAM_POHON = 'TANAM_POHON',
 
   /**
-   * Green Consumption - Using organic/eco-friendly products
+   * Produk Organik/Ramah Lingkungan
    */
-  GREEN_CONSUMPTION = 'GREEN_CONSUMPTION',
+  KONSUMSI_HIJAU = 'KONSUMSI_HIJAU',
 
   /**
-   * Green Community - Collective actions
+   * Aksi Kolektif
    */
-  GREEN_COMMUNITY = 'GREEN_COMMUNITY',
+  AKSI_KOLEKTIF = 'AKSI_KOLEKTIF',
 }
 
 /**
- * Green Waste sub-categories
- * @description Sub-categories for Green Waste actions
+ * Pilah Sampah sub-categories
+ * @description Sub-categories for Pilah Sampah actions
  */
 export enum GreenWasteSubCategory {
   /**
-   * Sorting organic waste
+   * Pilah Sampah Organik
    */
-  ORGANIC_WASTE = 'ORGANIC_WASTE',
+  SAMPAH_ORGANIK = 'SAMPAH_ORGANIK',
 
   /**
-   * Sorting recyclable inorganic waste (plastic, paper, metal)
+   * Pilah Sampah Anorganik Daur Ulang
    */
-  INORGANIC_RECYCLE = 'INORGANIC_RECYCLE',
+  SAMPAH_ANORGANIK = 'SAMPAH_ANORGANIK',
 
   /**
-   * Handling hazardous household waste (batteries, lamps, expired medicine)
+   * Penanganan Sampah Berbahaya (B3)
    */
-  HAZARDOUS_WASTE = 'HAZARDOUS_WASTE',
+  SAMPAH_B3 = 'SAMPAH_B3',
 }
 
 /**
- * Green Home sub-categories
- * @description Sub-categories for Green Home actions
+ * Tanam Pohon sub-categories
+ * @description Sub-categories for Tanam Pohon actions
  */
 export enum GreenHomeSubCategory {
   /**
-   * Planting new trees/plants
+   * Tanam Pohon/Tanaman Baru
    */
-  PLANT_TREE = 'PLANT_TREE',
+  TANAM_POHON_BARU = 'TANAM_POHON_BARU',
 
   /**
-   * Urban farming (vegetables in pots, small hydroponics)
+   * Urban Farming
    */
   URBAN_FARMING = 'URBAN_FARMING',
 
   /**
-   * Creating mini green corner at home
+   * Mini Green Corner
    */
   GREEN_CORNER = 'GREEN_CORNER',
 }
 
 /**
- * Green Consumption sub-categories
- * @description Sub-categories for Green Consumption actions
+ * Konsumsi Hijau sub-categories
+ * @description Sub-categories for Konsumsi Hijau actions
  */
 export enum GreenConsumptionSubCategory {
   /**
-   * Buying organic products
+   * Produk Organik
    */
-  ORGANIC_PRODUCT = 'ORGANIC_PRODUCT',
+  PRODUK_ORGANIK = 'PRODUK_ORGANIK',
 
   /**
-   * Shopping at refill station or bulk store
+   * Refill Station/Bulk Store
    */
   REFILL_STATION = 'REFILL_STATION',
 
   /**
-   * Using reusable bags/containers
+   * Barang Reusable
    */
-  REUSABLE_ITEMS = 'REUSABLE_ITEMS',
+  BARANG_REUSABLE = 'BARANG_REUSABLE',
 }
 
 /**
- * Green Community sub-categories
- * @description Sub-categories for Green Community actions
+ * Aksi Kolektif sub-categories
+ * @description Sub-categories for Aksi Kolektif actions
  */
 export enum GreenCommunitySubCategory {
   /**
-   * Community cleanup activities
+   * Kerja Bakti
    */
-  COMMUNITY_CLEANUP = 'COMMUNITY_CLEANUP',
+  KERJA_BAKTI = 'KERJA_BAKTI',
 
   /**
-   * River cleaning activities
+   * Bersih Sungai
    */
-  RIVER_CLEANUP = 'RIVER_CLEANUP',
+  BERSIH_SUNGAI = 'BERSIH_SUNGAI',
 }
 
 /**
