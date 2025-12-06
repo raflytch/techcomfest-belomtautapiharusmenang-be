@@ -58,8 +58,6 @@ export class GreenWasteAiService {
     [GreenActionCategory.GREEN_COMMUNITY]: {
       COMMUNITY_CLEANUP: { basePoints: 80, minScore: 70 },
       RIVER_CLEANUP: { basePoints: 90, minScore: 70 },
-      CAR_FREE_DAY: { basePoints: 60, minScore: 65 },
-      OTHER_COLLECTIVE: { basePoints: 50, minScore: 60 },
     },
   };
 
@@ -156,8 +154,6 @@ Analyze this image/video and determine if it shows collective green activities.
 VERIFICATION CRITERIA FOR GREEN COMMUNITY:
 1. For COMMUNITY_CLEANUP: Look for group cleanup activities, collected trash, cleaning tools
 2. For RIVER_CLEANUP: Look for river/water body cleaning, collected debris
-3. For CAR_FREE_DAY: Look for car-free day activities, cycling, walking, green events
-4. For OTHER_COLLECTIVE: Look for other group environmental activities
 
 IMPORTANT CHECKS:
 - Multiple people participating (if visible)

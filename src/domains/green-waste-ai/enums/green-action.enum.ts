@@ -106,16 +106,6 @@ export enum GreenCommunitySubCategory {
    * River cleaning activities
    */
   RIVER_CLEANUP = 'RIVER_CLEANUP',
-
-  /**
-   * Car free day green activities
-   */
-  CAR_FREE_DAY = 'CAR_FREE_DAY',
-
-  /**
-   * Other collective green actions
-   */
-  OTHER_COLLECTIVE = 'OTHER_COLLECTIVE',
 }
 
 /**

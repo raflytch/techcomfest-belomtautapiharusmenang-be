@@ -169,20 +169,6 @@ export class GreenWasteAiController {
             criteria: 'River cleaning activity, collected debris',
             basePoints: 90,
           },
-          {
-            id: 'CAR_FREE_DAY',
-            name: 'Car Free Day Hijau',
-            description: 'Green car-free day activities',
-            criteria: 'Car-free day activity (cycling, walking, green events)',
-            basePoints: 60,
-          },
-          {
-            id: 'OTHER_COLLECTIVE',
-            name: 'Aksi Kolektif Lainnya',
-            description: 'Other collective green actions',
-            criteria: 'Group environmental activity visible',
-            basePoints: 50,
-          },
         ],
       },
     };
