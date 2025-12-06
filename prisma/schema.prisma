@@ -121,6 +121,15 @@ model green_action {
   description String?
 
   /**
+   * Location data for map integration (Leaflet)
+   */
+  location_name String?
+  latitude      Float?
+  longitude     Float?
+  district      String?
+  city          String?
+
+  /**
    * Media upload for verification
    */
   media_url  String
@@ -148,6 +157,8 @@ model green_action {
   @@index([category])
   @@index([status])
   @@index([created_at])
+  @@index([district])
+  @@index([city])
 }
 
 /**

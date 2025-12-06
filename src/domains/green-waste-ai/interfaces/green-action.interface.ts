@@ -92,9 +92,13 @@ export interface ICreateGreenActionInput {
   mediaType: GreenActionMediaType;
 
   /**
-   * Optional location/district for statistics
+   * Location data for map integration
    */
-  location?: string;
+  locationName?: string;
+  latitude?: number;
+  longitude?: number;
+  district?: string;
+  city?: string;
 }
 
 /**
@@ -156,6 +160,15 @@ export interface IGreenActionResponse {
    * Points earned from this action
    */
   points: number;
+
+  /**
+   * Location data for map display
+   */
+  locationName?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  district?: string | null;
+  city?: string | null;
 
   /**
    * Creation timestamp

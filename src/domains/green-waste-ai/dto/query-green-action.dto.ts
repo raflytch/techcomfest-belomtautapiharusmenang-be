@@ -53,4 +53,28 @@ export class QueryGreenActionDto extends PaginationDto {
   @IsOptional()
   @IsString({ message: 'Sub-category must be a string' })
   subCategory?: string;
+
+  /**
+   * Filter by district
+   * @example "Menteng"
+   */
+  @ApiPropertyOptional({
+    description: 'Filter by district',
+    example: 'Menteng',
+  })
+  @IsOptional()
+  @IsString({ message: 'District must be a string' })
+  district?: string;
+
+  /**
+   * Filter by city
+   * @example "Jakarta Pusat"
+   */
+  @ApiPropertyOptional({
+    description: 'Filter by city',
+    example: 'Jakarta Pusat',
+  })
+  @IsOptional()
+  @IsString({ message: 'City must be a string' })
+  city?: string;
 }

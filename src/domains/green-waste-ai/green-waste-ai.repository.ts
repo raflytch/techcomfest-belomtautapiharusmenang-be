@@ -46,6 +46,11 @@ export class GreenWasteAiRepository {
     aiFeedback?: string;
     aiLabels?: string;
     points?: number;
+    locationName?: string;
+    latitude?: number;
+    longitude?: number;
+    district?: string;
+    city?: string;
   }): Promise<green_action> {
     return this.db.green_action.create({
       data: {
@@ -59,6 +64,11 @@ export class GreenWasteAiRepository {
         ai_feedback: data.aiFeedback,
         ai_labels: data.aiLabels,
         points: data.points || 0,
+        location_name: data.locationName,
+        latitude: data.latitude,
+        longitude: data.longitude,
+        district: data.district,
+        city: data.city,
       },
     });
   }
@@ -119,6 +129,8 @@ export class GreenWasteAiRepository {
       ...(query.subCategory && {
         ai_labels: { contains: query.subCategory },
       }),
+      ...(query.district && { district: query.district }),
+      ...(query.city && { city: query.city }),
     };
 
     const prismaOptions = toPrismaQueryOptions(query);
@@ -148,6 +160,8 @@ export class GreenWasteAiRepository {
       ...(query.subCategory && {
         ai_labels: { contains: query.subCategory },
       }),
+      ...(query.district && { district: query.district }),
+      ...(query.city && { city: query.city }),
     };
 
     const prismaOptions = toPrismaQueryOptions(query);

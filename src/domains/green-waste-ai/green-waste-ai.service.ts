@@ -251,6 +251,11 @@ Respond in this exact JSON format:
       aiFeedback: aiResult.feedback,
       aiLabels: JSON.stringify(aiResult.labels),
       points,
+      locationName: dto.locationName,
+      latitude: dto.latitude,
+      longitude: dto.longitude,
+      district: dto.district,
+      city: dto.city,
     });
 
     /**
@@ -605,6 +610,11 @@ Analyze the provided media and respond with the JSON format specified above.`;
       aiFeedback: action.ai_feedback,
       aiLabels: action.ai_labels,
       points: action.points,
+      locationName: action.location_name,
+      latitude: action.latitude,
+      longitude: action.longitude,
+      district: action.district,
+      city: action.city,
       createdAt: action.created_at,
       updatedAt: action.updated_at,
     };

@@ -56,16 +56,62 @@ export class CreateGreenActionDto {
   description?: string;
 
   /**
-   * Optional location/district for statistics
-   * @example "Kelurahan Menteng"
+   * Location name (e.g., landmark, street name)
+   * @example "Taman Menteng"
    */
   @ApiPropertyOptional({
-    description: 'Optional location/district for statistics',
-    example: 'Kelurahan Menteng',
+    description: 'Location name or landmark',
+    example: 'Taman Menteng',
   })
   @IsOptional()
-  @IsString({ message: 'Location must be a string' })
-  location?: string;
+  @IsString({ message: 'Location name must be a string' })
+  locationName?: string;
+
+  /**
+   * Latitude coordinate for map pinpoint
+   * @example -6.200000
+   */
+  @ApiPropertyOptional({
+    description: 'Latitude coordinate',
+    example: -6.2,
+  })
+  @IsOptional()
+  latitude?: number;
+
+  /**
+   * Longitude coordinate for map pinpoint
+   * @example 106.816666
+   */
+  @ApiPropertyOptional({
+    description: 'Longitude coordinate',
+    example: 106.816666,
+  })
+  @IsOptional()
+  longitude?: number;
+
+  /**
+   * District/Kelurahan for filtering
+   * @example "Menteng"
+   */
+  @ApiPropertyOptional({
+    description: 'District or Kelurahan',
+    example: 'Menteng',
+  })
+  @IsOptional()
+  @IsString({ message: 'District must be a string' })
+  district?: string;
+
+  /**
+   * City for broader filtering
+   * @example "Jakarta Pusat"
+   */
+  @ApiPropertyOptional({
+    description: 'City name',
+    example: 'Jakarta Pusat',
+  })
+  @IsOptional()
+  @IsString({ message: 'City must be a string' })
+  city?: string;
 }
 
 /**
