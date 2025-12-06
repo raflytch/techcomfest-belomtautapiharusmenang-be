@@ -4,7 +4,15 @@
  */
 
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import {
+  IsEnum,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Max,
+  Min,
+} from 'class-validator';
 import {
   GreenActionCategory,
   GreenCommunitySubCategory,
@@ -69,13 +77,18 @@ export class CreateGreenActionDto {
 
   /**
    * Latitude coordinate for map pinpoint
-   * @example -6.200000
+   * @example -6.2
    */
   @ApiPropertyOptional({
-    description: 'Latitude coordinate',
+    description: 'Latitude coordinate (-90 to 90)',
     example: -6.2,
+    minimum: -90,
+    maximum: 90,
   })
   @IsOptional()
+  @IsNumber({}, { message: 'Latitude must be a number' })
+  @Min(-90, { message: 'Latitude must be between -90 and 90' })
+  @Max(90, { message: 'Latitude must be between -90 and 90' })
   latitude?: number;
 
   /**
@@ -83,10 +96,15 @@ export class CreateGreenActionDto {
    * @example 106.816666
    */
   @ApiPropertyOptional({
-    description: 'Longitude coordinate',
+    description: 'Longitude coordinate (-180 to 180)',
     example: 106.816666,
+    minimum: -180,
+    maximum: 180,
   })
   @IsOptional()
+  @IsNumber({}, { message: 'Longitude must be a number' })
+  @Min(-180, { message: 'Longitude must be between -180 and 180' })
+  @Max(180, { message: 'Longitude must be between -180 and 180' })
   longitude?: number;
 
   /**

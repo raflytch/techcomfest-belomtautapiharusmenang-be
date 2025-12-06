@@ -25,6 +25,7 @@ import {
   ApiConsumes,
   ApiOperation,
   ApiParam,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
@@ -199,7 +200,7 @@ export class GreenWasteAiController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Green action data with media file',
+    description: 'Green action data with media file and location',
     schema: {
       type: 'object',
       required: ['category', 'subCategory', 'media'],
@@ -213,18 +214,44 @@ export class GreenWasteAiController {
             'GREEN_COMMUNITY',
           ],
           description: 'Main category of the green action',
+          example: 'GREEN_COMMUNITY',
         },
         subCategory: {
           type: 'string',
           description: 'Sub-category of the green action',
+          example: 'COMMUNITY_CLEANUP',
         },
         description: {
           type: 'string',
           description: 'Optional description of the action',
+          example: 'Membersihkan sampah di taman kota',
         },
-        location: {
+        locationName: {
           type: 'string',
-          description: 'Optional location/district',
+          description: 'Location name or landmark for map display',
+          example: 'Taman Menteng',
+        },
+        latitude: {
+          type: 'number',
+          format: 'float',
+          description: 'Latitude coordinate for map pinpoint (-90 to 90)',
+          example: -6.2,
+        },
+        longitude: {
+          type: 'number',
+          format: 'float',
+          description: 'Longitude coordinate for map pinpoint (-180 to 180)',
+          example: 106.816666,
+        },
+        district: {
+          type: 'string',
+          description: 'District or Kelurahan for filtering',
+          example: 'Menteng',
+        },
+        city: {
+          type: 'string',
+          description: 'City name for broader filtering',
+          example: 'Jakarta Pusat',
         },
         media: {
           type: 'string',
@@ -238,6 +265,51 @@ export class GreenWasteAiController {
   @ApiResponse({
     status: HttpStatus.CREATED,
     description: 'Green action submitted and verified successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 201 },
+        message: {
+          type: 'string',
+          example: 'Green action created successfully',
+        },
+        data: {
+          type: 'object',
+          properties: {
+            id: { type: 'string', example: 'uuid-here' },
+            userId: { type: 'string', example: 'user-uuid' },
+            category: { type: 'string', example: 'GREEN_COMMUNITY' },
+            description: {
+              type: 'string',
+              example: 'Membersihkan sampah di taman',
+            },
+            mediaUrl: {
+              type: 'string',
+              example: 'https://res.cloudinary.com/...',
+            },
+            mediaType: { type: 'string', example: 'IMAGE' },
+            status: { type: 'string', example: 'VERIFIED' },
+            aiScore: { type: 'number', example: 85 },
+            aiFeedback: {
+              type: 'string',
+              example: 'Great community cleanup effort!',
+            },
+            aiLabels: {
+              type: 'string',
+              example: '["trash_bags","cleanup_tools"]',
+            },
+            points: { type: 'number', example: 80 },
+            locationName: { type: 'string', example: 'Taman Menteng' },
+            latitude: { type: 'number', example: -6.2 },
+            longitude: { type: 'number', example: 106.816666 },
+            district: { type: 'string', example: 'Menteng' },
+            city: { type: 'string', example: 'Jakarta Pusat' },
+            createdAt: { type: 'string', format: 'date-time' },
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.BAD_REQUEST,
@@ -277,7 +349,55 @@ export class GreenWasteAiController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get my green actions',
-    description: 'Get paginated list of current user green actions',
+    description:
+      'Get paginated list of current user green actions with optional filters for category, status, subcategory, district, and city',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Items per page (default: 10)',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    enum: ['GREEN_WASTE', 'GREEN_HOME', 'GREEN_CONSUMPTION', 'GREEN_COMMUNITY'],
+    description: 'Filter by category',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['PENDING', 'VERIFIED', 'REJECTED', 'NEEDS_IMPROVEMENT'],
+    description: 'Filter by verification status',
+  })
+  @ApiQuery({
+    name: 'subCategory',
+    required: false,
+    type: String,
+    description: 'Filter by sub-category',
+    example: 'COMMUNITY_CLEANUP',
+  })
+  @ApiQuery({
+    name: 'district',
+    required: false,
+    type: String,
+    description: 'Filter by district/kelurahan',
+    example: 'Menteng',
+  })
+  @ApiQuery({
+    name: 'city',
+    required: false,
+    type: String,
+    description: 'Filter by city',
+    example: 'Jakarta Pusat',
   })
   @ApiResponse({
     status: HttpStatus.OK,
@@ -339,7 +459,55 @@ export class GreenWasteAiController {
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
     summary: 'Get all green actions (Admin/DLH only)',
-    description: 'Get paginated list of all green actions',
+    description:
+      'Get paginated list of all green actions with filters for category, status, subcategory, district, and city',
+  })
+  @ApiQuery({
+    name: 'page',
+    required: false,
+    type: Number,
+    description: 'Page number (default: 1)',
+    example: 1,
+  })
+  @ApiQuery({
+    name: 'limit',
+    required: false,
+    type: Number,
+    description: 'Items per page (default: 10)',
+    example: 10,
+  })
+  @ApiQuery({
+    name: 'category',
+    required: false,
+    enum: ['GREEN_WASTE', 'GREEN_HOME', 'GREEN_CONSUMPTION', 'GREEN_COMMUNITY'],
+    description: 'Filter by category',
+  })
+  @ApiQuery({
+    name: 'status',
+    required: false,
+    enum: ['PENDING', 'VERIFIED', 'REJECTED', 'NEEDS_IMPROVEMENT'],
+    description: 'Filter by verification status',
+  })
+  @ApiQuery({
+    name: 'subCategory',
+    required: false,
+    type: String,
+    description: 'Filter by sub-category',
+    example: 'COMMUNITY_CLEANUP',
+  })
+  @ApiQuery({
+    name: 'district',
+    required: false,
+    type: String,
+    description: 'Filter by district/kelurahan for map-based filtering',
+    example: 'Menteng',
+  })
+  @ApiQuery({
+    name: 'city',
+    required: false,
+    type: String,
+    description: 'Filter by city for broader area filtering',
+    example: 'Jakarta Pusat',
   })
   @ApiResponse({
     status: HttpStatus.OK,
