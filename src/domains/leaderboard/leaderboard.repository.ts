@@ -45,9 +45,7 @@ export class LeaderboardRepository {
         total_points: true,
         _count: {
           select: {
-            green_actions: {
-              where: { status: 'APPROVED' },
-            },
+            green_actions: true,
           },
         },
       },
@@ -88,12 +86,11 @@ export class LeaderboardRepository {
         id: true,
         email: true,
         name: true,
+        avatar_url: true,
         total_points: true,
         _count: {
           select: {
-            green_actions: {
-              where: { status: 'APPROVED' },
-            },
+            green_actions: true,
           },
         },
       },
@@ -105,6 +102,7 @@ export class LeaderboardRepository {
       id: user.id,
       email: user.email,
       name: user.name,
+      avatarUrl: user.avatar_url,
       totalPoints: user.total_points,
       totalActions: user._count.green_actions,
     }));
@@ -153,9 +151,7 @@ export class LeaderboardRepository {
         total_points: true,
         _count: {
           select: {
-            green_actions: {
-              where: { status: 'APPROVED' },
-            },
+            green_actions: true,
           },
         },
       },

@@ -77,6 +77,7 @@ export class LeaderboardController {
         rank: index + 1,
         userId: user.id,
         name: user.name,
+        avatarUrl: user.avatarUrl,
         totalPoints: user.totalPoints,
         totalActions: user.totalActions,
       })),
