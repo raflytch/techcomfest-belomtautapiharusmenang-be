@@ -36,7 +36,10 @@ import { CurrentUser } from '../../commons/decorators/current-user.decorator';
 import { JwtPayload } from '../../commons/strategies/jwt.strategy';
 import { GreenWasteAiService } from './green-waste-ai.service';
 import { CreateGreenActionDto } from './dto/create-green-action.dto';
-import { QueryGreenActionDto } from './dto/query-green-action.dto';
+import {
+  QueryGreenActionDto,
+  AdminQueryGreenActionDto,
+} from './dto/query-green-action.dto';
 
 /**
  * Green Waste AI Controller
@@ -204,10 +207,11 @@ export class GreenWasteAiController {
   })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
-    description: 'Green action data with media file and location',
+    description:
+      'Green action data with media file and coordinates (location info auto-generated via reverse geocoding)',
     schema: {
       type: 'object',
-      required: ['category', 'subCategory', 'media'],
+      required: ['category', 'subCategory', 'latitude', 'longitude', 'media'],
       properties: {
         category: {
           type: 'string',
@@ -230,32 +234,19 @@ export class GreenWasteAiController {
           description: 'Optional description of the action',
           example: 'Membersihkan sampah di taman kota',
         },
-        locationName: {
-          type: 'string',
-          description: 'Location name or landmark for map display',
-          example: 'Taman Menteng',
-        },
         latitude: {
           type: 'number',
           format: 'float',
-          description: 'Latitude coordinate for map pinpoint (-90 to 90)',
+          description:
+            'Latitude coordinate (-90 to 90) - REQUIRED for reverse geocoding',
           example: -6.2,
         },
         longitude: {
           type: 'number',
           format: 'float',
-          description: 'Longitude coordinate for map pinpoint (-180 to 180)',
+          description:
+            'Longitude coordinate (-180 to 180) - REQUIRED for reverse geocoding',
           example: 106.816666,
-        },
-        district: {
-          type: 'string',
-          description: 'District or Kelurahan for filtering',
-          example: 'Menteng',
-        },
-        city: {
-          type: 'string',
-          description: 'City name for broader filtering',
-          example: 'Jakarta Pusat',
         },
         media: {
           type: 'string',
@@ -452,9 +443,9 @@ export class GreenWasteAiController {
   }
 
   /**
-   * Get all green actions (admin only)
-   * @param {QueryGreenActionDto} query - Query parameters
-   * @returns {Promise<object>} Paginated green actions
+   * Get all green actions (admin only) - NO PAGINATION
+   * @param {AdminQueryGreenActionDto} query - Query parameters with filters
+   * @returns {Promise<object>} All green actions matching filters
    */
   @Get()
   @UseGuards(JwtAuthGuard, RolesGuard)
@@ -462,73 +453,89 @@ export class GreenWasteAiController {
   @ApiBearerAuth('access-token')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({
-    summary: 'Get all green actions (Admin/DLH only)',
+    summary: 'Get all green actions (Admin/DLH only) - No Pagination',
     description:
-      'Get paginated list of all green actions with filters for category, status, subcategory, district, and city',
+      'Get ALL green actions with filters: search (location/description/user name), category, status, district, city. All filters are case insensitive. No pagination.',
   })
   @ApiQuery({
-    name: 'page',
+    name: 'search',
     required: false,
-    type: Number,
-    description: 'Page number (default: 1)',
-    example: 1,
-  })
-  @ApiQuery({
-    name: 'limit',
-    required: false,
-    type: Number,
-    description: 'Items per page (default: 10)',
-    example: 10,
+    type: String,
+    description:
+      'Search by location name, description, or user name (case insensitive)',
+    example: 'Taman',
   })
   @ApiQuery({
     name: 'category',
     required: false,
-    enum: ['GREEN_WASTE', 'GREEN_HOME', 'GREEN_CONSUMPTION', 'GREEN_COMMUNITY'],
+    enum: ['PILAH_SAMPAH', 'TANAM_POHON', 'KONSUMSI_HIJAU', 'AKSI_KOLEKTIF'],
     description: 'Filter by category',
+    example: 'PILAH_SAMPAH',
   })
   @ApiQuery({
     name: 'status',
     required: false,
     enum: ['PENDING', 'VERIFIED', 'REJECTED', 'NEEDS_IMPROVEMENT'],
     description: 'Filter by verification status',
-  })
-  @ApiQuery({
-    name: 'subCategory',
-    required: false,
-    type: String,
-    description: 'Filter by sub-category',
-    example: 'COMMUNITY_CLEANUP',
+    example: 'VERIFIED',
   })
   @ApiQuery({
     name: 'district',
     required: false,
     type: String,
-    description: 'Filter by district/kelurahan for map-based filtering',
+    description: 'Filter by district/kelurahan (case insensitive)',
     example: 'Menteng',
   })
   @ApiQuery({
     name: 'city',
     required: false,
     type: String,
-    description: 'Filter by city for broader area filtering',
+    description: 'Filter by city (case insensitive)',
     example: 'Jakarta Pusat',
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    description: 'Green actions retrieved successfully',
+    description: 'All green actions retrieved successfully',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 200 },
+        message: {
+          type: 'string',
+          example: 'Green actions retrieved successfully',
+        },
+        total: { type: 'number', example: 150 },
+        data: {
+          type: 'array',
+          items: {
+            type: 'object',
+            properties: {
+              id: { type: 'string' },
+              userId: { type: 'string' },
+              category: { type: 'string' },
+              status: { type: 'string' },
+              locationName: { type: 'string' },
+              district: { type: 'string' },
+              city: { type: 'string' },
+              points: { type: 'number' },
+            },
+          },
+        },
+      },
+    },
   })
   @ApiResponse({
     status: HttpStatus.FORBIDDEN,
     description: 'Access denied - Admin/DLH only',
   })
-  async getAllActions(@Query() query: QueryGreenActionDto) {
-    const result = await this.greenWasteAiService.getAllActions(query);
+  async getAllActions(@Query() query: AdminQueryGreenActionDto) {
+    const result = await this.greenWasteAiService.getAllActionsForAdmin(query);
 
     return {
       statusCode: HttpStatus.OK,
       message: 'Green actions retrieved successfully',
-      data: result.data,
-      meta: result.meta,
+      total: result.length,
+      data: result,
     };
   }
 

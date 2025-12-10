@@ -168,11 +168,11 @@ export class UserRepository {
    * @param {string} id - User ID to delete
    * @returns {Promise<user>} Deleted user
    * @description Handles cascade deletion for:
-   * - green_actions (cascade delete)
-   * - voucher_claims (cascade delete)
-   * - leaderboard_entry (cascade delete)
-   * - vouchers (cascade delete for UMKM users)
-   * - otp_codes (cascade delete)
+   * - green_actions (onDelete: Cascade)
+   * - voucher_claims (onDelete: Cascade)
+   * - vouchers (onDelete: Cascade - for UMKM users)
+   * - otp_codes (onDelete: Cascade)
+   * All relations are automatically handled by Prisma cascade constraints defined in schema.prisma
    */
   async delete(id: string): Promise<user> {
     /**

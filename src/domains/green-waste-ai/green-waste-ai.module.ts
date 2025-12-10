@@ -9,6 +9,7 @@ import { memoryStorage } from 'multer';
 import { GreenWasteAiController } from './green-waste-ai.controller';
 import { GreenWasteAiService } from './green-waste-ai.service';
 import { GreenWasteAiRepository } from './green-waste-ai.repository';
+import { GeocodingModule } from '../../libs/geocoding/geocoding.module';
 
 /**
  * Green Waste AI Module
@@ -26,6 +27,7 @@ import { GreenWasteAiRepository } from './green-waste-ai.repository';
         fileSize: 100 * 1024 * 1024, // 100MB max (for videos)
       },
     }),
+    GeocodingModule,
   ],
   controllers: [GreenWasteAiController],
   providers: [GreenWasteAiService, GreenWasteAiRepository],

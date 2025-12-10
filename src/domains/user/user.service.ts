@@ -10,6 +10,7 @@ import {
   ConflictException,
   NotFoundException,
   ForbiddenException,
+  Logger,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
@@ -49,6 +50,8 @@ export type SafeUser = ISafeUser;
  */
 @Injectable()
 export class UserService {
+  private readonly logger = new Logger(UserService.name);
+
   /**
    * Bcrypt salt rounds for password hashing
    */
@@ -725,5 +728,37 @@ export class UserService {
     }
 
     return this.toSafeUser(user);
+  }
+
+  /**
+   * Delete user by ID (Admin only - no OTP required)
+   * @param {string} targetUserId - User ID to delete
+   * @returns {Promise<{ message: string; deletedUser: SafeUser }>} Deletion result with deleted user info
+   */
+  async adminDeleteUser(
+    targetUserId: string,
+  ): Promise<{ message: string; deletedUser: SafeUser }> {
+    const user = await this.userRepository.findById(targetUserId);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    /**
+     * Delete user and all related data (cascade handled by Prisma)
+     * Relations to delete:
+     * - green_actions (CASCADE)
+     * - voucher_claims (CASCADE)
+     * - vouchers (CASCADE - for UMKM users)
+     * - otp_codes (CASCADE)
+     */
+    const deletedUser = await this.userRepository.delete(targetUserId);
+
+    this.logger.log(`Admin deleted user: ${targetUserId}`);
+
+    return {
+      message: 'User deleted successfully',
+      deletedUser: this.toSafeUser(deletedUser),
+    };
   }
 }

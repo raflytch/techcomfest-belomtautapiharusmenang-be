@@ -11,7 +11,10 @@ import {
 } from '../../commons/helpers/pagination.helper';
 import { IPaginatedResult } from '../../commons/intefaces/pagination.interface';
 import { green_action } from '@prisma/client';
-import { QueryGreenActionDto } from './dto/query-green-action.dto';
+import {
+  QueryGreenActionDto,
+  AdminQueryGreenActionDto,
+} from './dto/query-green-action.dto';
 import {
   GreenActionCategory,
   GreenActionStatus,
@@ -185,6 +188,86 @@ export class GreenWasteAiRepository {
     ]);
 
     return createPaginatedResult(data, total, query);
+  }
+
+  /**
+   * Find all green actions for admin without pagination
+   * @param {AdminQueryGreenActionDto} query - Query parameters with filters
+   * @returns {Promise<green_action[]>} All green actions matching filters
+   */
+  async findAllForAdmin(
+    query: AdminQueryGreenActionDto,
+  ): Promise<green_action[]> {
+    const where: any = {};
+
+    // Search filter (case insensitive)
+    if (query.search) {
+      where.OR = [
+        {
+          location_name: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          description: {
+            contains: query.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          user: {
+            name: {
+              contains: query.search,
+              mode: 'insensitive',
+            },
+          },
+        },
+      ];
+    }
+
+    // Category filter
+    if (query.category) {
+      where.category = query.category;
+    }
+
+    // Status filter
+    if (query.status) {
+      where.status = query.status;
+    }
+
+    // District filter (case insensitive)
+    if (query.district) {
+      where.district = {
+        contains: query.district,
+        mode: 'insensitive',
+      };
+    }
+
+    // City filter (case insensitive)
+    if (query.city) {
+      where.city = {
+        contains: query.city,
+        mode: 'insensitive',
+      };
+    }
+
+    return this.db.green_action.findMany({
+      where,
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            avatar_url: true,
+          },
+        },
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
+    });
   }
 
   /**

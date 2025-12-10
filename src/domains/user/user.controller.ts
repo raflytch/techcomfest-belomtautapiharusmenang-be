@@ -435,4 +435,43 @@ export class UserController {
   async getUserById(@Param('id') id: string): Promise<ISafeUser> {
     return this.userService.getUserById(id);
   }
+
+  /**
+   * Delete user by ID (Admin only - no OTP required)
+   * @param {string} id - User ID to delete
+   * @returns {Promise<{ message: string; deletedUser: ISafeUser }>} Deletion result with deleted user info
+   */
+  @Delete('admin/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
+  @ApiBearerAuth('access-token')
+  @ApiOperation({
+    summary: 'Delete user by ID (Admin only)',
+    description:
+      'Permanently delete a user and all related data. No OTP required. Cascade deletes: green_actions, voucher_claims, vouchers (for UMKM), otp_codes',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User deleted successfully',
+    schema: {
+      example: {
+        message: 'User deleted successfully',
+        deletedUser: {
+          id: '123e4567-e89b-12d3-a456-426614174000',
+          email: 'user@example.com',
+          name: 'John Doe',
+          role: 'WARGA',
+          totalPoints: 100,
+        },
+      },
+    },
+  })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Admin only' })
+  @ApiResponse({ status: 404, description: 'User not found' })
+  async adminDeleteUser(
+    @Param('id') id: string,
+  ): Promise<{ message: string; deletedUser: ISafeUser }> {
+    return this.userService.adminDeleteUser(id);
+  }
 }

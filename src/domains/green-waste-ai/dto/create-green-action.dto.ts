@@ -64,72 +64,36 @@ export class CreateGreenActionDto {
   description?: string;
 
   /**
-   * Location name (e.g., landmark, street name)
-   * @example "Taman Menteng"
-   */
-  @ApiPropertyOptional({
-    description: 'Location name or landmark',
-    example: 'Taman Menteng',
-  })
-  @IsOptional()
-  @IsString({ message: 'Location name must be a string' })
-  locationName?: string;
-
-  /**
-   * Latitude coordinate for map pinpoint
+   * Latitude coordinate for map pinpoint (required for reverse geocoding)
    * @example -6.2
    */
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Latitude coordinate (-90 to 90)',
     example: -6.2,
     minimum: -90,
     maximum: 90,
   })
-  @IsOptional()
+  @IsNotEmpty({ message: 'Latitude is required' })
   @IsNumber({}, { message: 'Latitude must be a number' })
   @Min(-90, { message: 'Latitude must be between -90 and 90' })
   @Max(90, { message: 'Latitude must be between -90 and 90' })
-  latitude?: number;
+  latitude: number;
 
   /**
-   * Longitude coordinate for map pinpoint
+   * Longitude coordinate for map pinpoint (required for reverse geocoding)
    * @example 106.816666
    */
-  @ApiPropertyOptional({
+  @ApiProperty({
     description: 'Longitude coordinate (-180 to 180)',
     example: 106.816666,
     minimum: -180,
     maximum: 180,
   })
-  @IsOptional()
+  @IsNotEmpty({ message: 'Longitude is required' })
   @IsNumber({}, { message: 'Longitude must be a number' })
   @Min(-180, { message: 'Longitude must be between -180 and 180' })
   @Max(180, { message: 'Longitude must be between -180 and 180' })
-  longitude?: number;
-
-  /**
-   * District/Kelurahan for filtering
-   * @example "Menteng"
-   */
-  @ApiPropertyOptional({
-    description: 'District or Kelurahan',
-    example: 'Menteng',
-  })
-  @IsOptional()
-  @IsString({ message: 'District must be a string' })
-  district?: string;
-
-  /**
-   * City for broader filtering
-   * @example "Jakarta Pusat"
-   */
-  @ApiPropertyOptional({
-    description: 'City name',
-    example: 'Jakarta Pusat',
-  })
-  @IsOptional()
-  @IsString({ message: 'City must be a string' })
-  city?: string;
+  longitude: number;
 }
 
 /**

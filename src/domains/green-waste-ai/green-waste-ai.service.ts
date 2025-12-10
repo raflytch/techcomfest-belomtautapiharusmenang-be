@@ -12,9 +12,13 @@ import {
 } from '@nestjs/common';
 import { GoogleGenAiService } from '../../libs/google-genai/google-gen-ai.service';
 import { CloudinaryService } from '../../libs/cloudinary/cloudinary.service';
+import { GeocodingService } from '../../libs/geocoding/geocoding.service';
 import { GreenWasteAiRepository } from './green-waste-ai.repository';
 import { CreateGreenActionDto } from './dto/create-green-action.dto';
-import { QueryGreenActionDto } from './dto/query-green-action.dto';
+import {
+  QueryGreenActionDto,
+  AdminQueryGreenActionDto,
+} from './dto/query-green-action.dto';
 import {
   GreenActionCategory,
   GreenActionMediaType,
@@ -181,11 +185,13 @@ Respond in this exact JSON format:
    * @param {GreenWasteAiRepository} repository - Green action repository
    * @param {GoogleGenAiService} genAiService - Google Gen AI service
    * @param {CloudinaryService} cloudinaryService - Cloudinary upload service
+   * @param {GeocodingService} geocodingService - Geocoding service for reverse geocoding
    */
   constructor(
     private readonly repository: GreenWasteAiRepository,
     private readonly genAiService: GoogleGenAiService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly geocodingService: GeocodingService,
   ) {}
 
   /**
@@ -206,6 +212,24 @@ Respond in this exact JSON format:
      * Validate file type and determine media type
      */
     const mediaType = this.getMediaType(file.mimetype);
+
+    /**
+     * Validate coordinates and perform reverse geocoding
+     */
+    if (
+      !this.geocodingService.validateCoordinates(dto.latitude, dto.longitude)
+    ) {
+      throw new BadRequestException('Invalid latitude or longitude values');
+    }
+
+    const locationInfo = await this.geocodingService.reverseGeocode(
+      dto.latitude,
+      dto.longitude,
+    );
+
+    this.logger.log(
+      `Reverse geocoded location: ${locationInfo.locationName}, ${locationInfo.district}, ${locationInfo.city}`,
+    );
 
     /**
      * Upload media to Cloudinary
@@ -238,7 +262,7 @@ Respond in this exact JSON format:
     );
 
     /**
-     * Create green action in database
+     * Create green action in database with reverse geocoded location
      */
     const greenAction = await this.repository.create({
       userId,
@@ -251,11 +275,11 @@ Respond in this exact JSON format:
       aiFeedback: aiResult.feedback,
       aiLabels: JSON.stringify(aiResult.labels),
       points,
-      locationName: dto.locationName,
+      locationName: locationInfo.locationName,
       latitude: dto.latitude,
       longitude: dto.longitude,
-      district: dto.district,
-      city: dto.city,
+      district: locationInfo.district,
+      city: locationInfo.city,
     });
 
     /**
@@ -301,6 +325,18 @@ Respond in this exact JSON format:
       data: result.data.map((action) => this.mapToResponse(action)),
       meta: result.meta,
     };
+  }
+
+  /**
+   * Get all green actions for admin without pagination
+   * @param {AdminQueryGreenActionDto} query - Query parameters with filters
+   * @returns {Promise<IGreenActionResponse[]>} All green actions matching filters
+   */
+  async getAllActionsForAdmin(
+    query: AdminQueryGreenActionDto,
+  ): Promise<IGreenActionResponse[]> {
+    const actions = await this.repository.findAllForAdmin(query);
+    return actions.map((action) => this.mapToResponse(action));
   }
 
   /**
