@@ -83,6 +83,63 @@ Headers:
 }
 ```
 
+## 👤 Default Accounts
+
+Setelah seeding database, akun berikut tersedia untuk login:
+
+| Role  | Email            | Password    |
+| ----- | ---------------- | ----------- |
+| ADMIN | admin@sirkula.id | Admin123456 |
+| DLH   | dlh@sirkula.id   | Dlh123456   |
+
+⚠️ **Ganti password default di production!**
+
+## 🚀 Instalasi & Menjalankan Project
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/raflytch/techcomfest-belomtautapiharusmenang-be.git
+cd techcomfest-belomtautapiharusmenang-be
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Setup Environment Variables
+
+Copy file `.env.example` ke `.env` dan sesuaikan konfigurasinya:
+
+```bash
+cp .env.example .env
+```
+
+### 4. Setup Database
+
+```bash
+# Generate Prisma client
+npx prisma generate
+
+# Run migrations
+npx prisma migrate dev
+
+# Seed database (DLH & Admin accounts)
+pnpm db:seed
+```
+
+### 5. Jalankan Aplikasi
+
+```bash
+# Development mode
+pnpm run start:dev
+
+# Production mode
+pnpm run start:prod
+```
+
 ## ⚙️ Environment Variables
 
 Buat file `.env` di root directory:
@@ -157,45 +214,6 @@ SHA_WEBHOOK_SECRET=your_sha_webhook_secret
 
 1. Generate random string yang aman untuk `SHA_WEBHOOK_SECRET`
 2. Gunakan secret yang sama di external scheduler untuk header `x-sha-key`
-
-## 🚀 Instalasi
-
-```bash
-# Install dependencies
-$ pnpm install
-
-# Generate Prisma client
-$ npx prisma generate
-
-# Run migrations
-$ npx prisma migrate dev
-
-# Seed database (DLH & Admin accounts)
-$ pnpm db:seed
-
-# Development mode
-$ pnpm run start:dev
-
-# Production mode
-$ pnpm run start:prod
-```
-
-## 🌱 Database Seeding
-
-Seed database dengan akun DLH dan Admin default:
-
-```bash
-$ pnpm db:seed
-```
-
-**Default Accounts:**
-
-| Role  | Email            | Password    |
-| ----- | ---------------- | ----------- |
-| ADMIN | admin@sirkula.id | Admin123456 |
-| DLH   | dlh@sirkula.id   | Dlh123456   |
-
-⚠️ **Ganti password default di production!**
 
 ## 🧪 Testing
 
