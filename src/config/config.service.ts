@@ -167,4 +167,20 @@ export class AppConfigService {
   get shaWebhookSecret(): string {
     return this.get<string>('SHA_WEBHOOK_SECRET', '');
   }
+
+  /**
+   * Get API Documentation Username
+   * @returns {string} API_DOCS_USERNAME environment variable
+   */
+  get apiDocsUsername(): string {
+    return this.get<string>('API_DOCS_USERNAME', 'admin');
+  }
+
+  /**
+   * Get API Documentation Password
+   * @returns {string} API_DOCS_PASSWORD environment variable
+   */
+  get apiDocsPassword(): string {
+    return this.get<string>('API_DOCS_PASSWORD', 'password');
+  }
 }

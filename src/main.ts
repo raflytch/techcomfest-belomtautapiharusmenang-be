@@ -8,6 +8,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { ResponseInterceptor } from './commons/interceptors/response.interceptor';
+import { AppConfigService } from './config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -51,8 +52,38 @@ async function bootstrap() {
   app.useGlobalInterceptors(new ResponseInterceptor());
 
   /**
+   * Configure Basic Authentication for API documentation
+   * @description Protects /api-docs endpoint with username and password
+   */
+  const configService = app.get(AppConfigService);
+  const apiDocsUsername = configService.apiDocsUsername;
+  const apiDocsPassword = configService.apiDocsPassword;
+
+  app.use('/api-docs', (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+      res.setHeader('WWW-Authenticate', 'Basic realm="API Documentation"');
+      return res.status(401).send('Authentication required');
+    }
+
+    const base64Credentials = authHeader.split(' ')[1];
+    const credentials = Buffer.from(base64Credentials, 'base64').toString(
+      'utf-8',
+    );
+    const [username, password] = credentials.split(':');
+
+    if (username === apiDocsUsername && password === apiDocsPassword) {
+      return next();
+    }
+
+    res.setHeader('WWW-Authenticate', 'Basic realm="API Documentation"');
+    return res.status(401).send('Invalid credentials');
+  });
+
+  /**
    * Configure Swagger API documentation
-   * @description Available at /api-docs endpoint
+   * @description Available at /api-docs endpoint (protected by basic auth)
    */
   const swaggerConfig = new DocumentBuilder()
     .setTitle('Sirkula API')
