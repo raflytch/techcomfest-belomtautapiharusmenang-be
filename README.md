@@ -140,6 +140,17 @@ pnpm run start:dev
 pnpm run start:prod
 ```
 
+## 📚 API Documentation
+
+Setelah aplikasi berjalan, akses dokumentasi API di `http://localhost:3000/api-docs`.
+
+**Autentikasi Diperlukan:**
+
+- **Username**: Sesuai `API_DOCS_USERNAME` di file `.env`
+- **Password**: Sesuai `API_DOCS_PASSWORD` di file `.env`
+
+Browser akan menampilkan dialog login saat mengakses endpoint tersebut.
+
 ## ⚙️ Environment Variables
 
 Buat file `.env` di root directory:
@@ -195,6 +206,15 @@ EMAIL_APP_PASSWORD=your_16_digit_app_password
 # ===========================================
 # Secret key for webhook endpoints (daily reward distribution)
 SHA_WEBHOOK_SECRET=your_sha_webhook_secret
+
+# ===========================================
+# API DOCUMENTATION CONFIGURATION
+# ===========================================
+# Username untuk mengakses API documentation (/api-docs)
+API_DOCS_USERNAME=your_secure_username_here
+
+# Password untuk mengakses API documentation (/api-docs)
+API_DOCS_PASSWORD=your_secure_password_here
 ```
 
 ### 📧 Setup Gmail App Password
